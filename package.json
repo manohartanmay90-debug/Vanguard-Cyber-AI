@@ -1,11 +1,12 @@
 {
-  "name": "aegis-ai",
+  "name": "vanguard-cyber-ai",
   "version": "1.0.0",
-  "description": "Aegis AI - Enterprise AI Firewall and Trust Dashboard",
+  "description": "Vanguard Cyber AI - Enterprise AI Firewall and Threat Interception Platform",
   "scripts": {
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
     "install:all": "cd server && npm install && cd ../client && npm install",
-    "setup": "npm run install:all"
+    "setup": "npm run install:all",
+    "build": "cd client && npm install && npm run build"
   }
 }
