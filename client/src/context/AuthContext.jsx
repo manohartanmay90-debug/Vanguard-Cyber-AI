@@ -35,10 +35,15 @@ export function AuthProvider({ children }) {
         .from('profiles')
         .select('id, role, email')
         .eq('id', userId)
-        .single();
-      if (!error) setProfile(data);
+        .maybeSingle();
+      if (!error && data) {
+        setProfile(data);
+      } else {
+        setProfile({ id: userId, role: 'employee', email: session?.user?.email });
+      }
     } catch (err) {
-      console.error('Failed to fetch profile:', err);
+      console.warn('Failed to fetch profile:', err);
+      setProfile({ id: userId, role: 'employee', email: session?.user?.email });
     } finally {
       setLoading(false);
     }

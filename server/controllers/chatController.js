@@ -82,7 +82,7 @@ export async function handleChat(req, res) {
     return res.status(200).json({
       status: 'blocked',
       response:
-        '🚫 **Security Alert:** Your request has been blocked by the Aegis AI Firewall. ' +
+        '🚫 **Security Alert:** Your request has been blocked by the Vanguard Cyber AI Firewall. ' +
         'It was identified as a potential security threat. This incident has been logged and will be reviewed by your IT administrator.',
       original_prompt: originalPrompt,
       masked_prompt: maskedText,

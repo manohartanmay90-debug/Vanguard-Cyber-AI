@@ -36,7 +36,7 @@ app.use(cors({
 app.use(express.json({ limit: '10kb' }));
 
 // Health check
-app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'Aegis AI Firewall' }));
+app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'Vanguard Cyber AI Firewall' }));
 
 // API Routes
 app.use('/api/chat', chatRouter);
@@ -52,5 +52,5 @@ app.use((err, _req, res, _next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🛡️  Aegis AI Firewall running on port ${PORT}`);
+  console.log(`🛡️  Vanguard Cyber AI Firewall running on port ${PORT}`);
 });

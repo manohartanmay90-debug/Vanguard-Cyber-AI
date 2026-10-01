@@ -27,12 +27,12 @@ export default function LoginPage() {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
-        // Determine role and redirect
+        // Determine role and redirect (use maybeSingle so missing profile does not crash login)
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', data.user.id)
-          .single();
+          .maybeSingle();
 
         if (profile?.role === 'admin') {
           navigate('/admin', { replace: true });
@@ -47,6 +47,26 @@ export default function LoginPage() {
       }
     } catch (err) {
       setError(err.message || 'Authentication failed. Please verify credentials.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDemoLogin() {
+    setEmail('demo@vanguardcyber.ai');
+    setPassword('VanguardDemo2026!');
+    setError('');
+    setSuccess('');
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: 'demo@vanguardcyber.ai',
+        password: 'VanguardDemo2026!',
+      });
+      if (error) throw error;
+      navigate('/chat', { replace: true });
+    } catch (err) {
+      setError(err.message || 'Demo login failed. Please verify credentials.');
     } finally {
       setLoading(false);
     }
@@ -230,6 +250,24 @@ export default function LoginPage() {
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
+            </button>
+
+            {/* Instant Demo Access Divider */}
+            <div className="relative my-4 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200/80" /></div>
+              <span className="relative bg-white px-2.5 text-[11px] font-medium text-slate-400 uppercase tracking-wider">or rapid evaluation</span>
+            </div>
+
+            {/* Instant 1-Click Demo Login Button */}
+            <button
+              id="demo-login-btn"
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={loading}
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 text-xs font-semibold transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-brand-600" />
+              <span>Instant 1-Click Demo Login (Analyst Mode)</span>
             </button>
           </form>
 
