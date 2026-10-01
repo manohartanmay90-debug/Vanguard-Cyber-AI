@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { maskPII, unmaskPII, describePII, redactForAuditLog } from '../utils/piiMasker.js';
-import { analyzeThreat, generateResponse } from '../utils/gemini.js';
+import { analyzeThreat, generateResponse, fastHeuristicThreatCheck } from '../utils/gemini.js';
 import {
   insertPromptLog,
   getUserPromptHistory,
@@ -37,15 +37,69 @@ export async function handleChat(req, res) {
   const { prompt: originalPrompt, zeroRetention = false } = parseResult.data;
   const userId = req.user.id;
 
-  // ── 2. PII Masking ───────────────────────────────────────────────
+  // ── 2. PII Masking (In-Memory, Sub-Millisecond) ──────────────────
   const { maskedText, tokenMap, entitiesFound, breakdown } = maskPII(originalPrompt);
 
   if (entitiesFound > 0) {
     console.log(`[PII] Masked ${entitiesFound} entit(ies) for user ${userId}: ${describePII(breakdown)}`);
   }
 
-  // ── 3. Threat Detection ──────────────────────────────────────────
-  const threatResult = await analyzeThreat(maskedText);
+  // ── 3. High-Speed Threat Pre-Check (0ms Instant Gate) ────────────
+  const heuristicCheck = fastHeuristicThreatCheck(maskedText);
+
+  if (heuristicCheck?.isMalicious) {
+    // Instant hard block in 0ms without waiting for LLMs
+    if (!zeroRetention) {
+      const auditSafePrompt = entitiesFound > 0 ? redactForAuditLog(originalPrompt, tokenMap) : originalPrompt;
+      insertPromptLog({
+        userId,
+        originalPrompt: auditSafePrompt,
+        maskedPrompt: maskedText,
+        aiResponse: null,
+        status: 'blocked',
+        threatReason: `[${heuristicCheck.category?.toUpperCase()}] ${heuristicCheck.reason}`,
+        piiEntitiesFound: entitiesFound,
+      }).catch(err => console.error('Log insert failed:', err.message));
+    }
+
+    return res.status(200).json({
+      status: 'blocked',
+      response:
+        '🚫 **Security Alert:** Your request has been blocked by the Vanguard Cyber AI Firewall. ' +
+        'It was identified as a potential security threat. This incident has been logged and will be reviewed by your IT administrator.',
+      original_prompt: originalPrompt,
+      masked_prompt: maskedText,
+      threat_reason: `[${heuristicCheck.category?.toUpperCase()}] ${heuristicCheck.reason}`,
+      threat_category: heuristicCheck.category,
+      confidence_score: heuristicCheck.confidenceScore,
+    });
+  }
+
+  // ── 4. Concurrent Threat Detection & AI Response (Parallel Execution) ─
+  let threatResult;
+  let aiResponseRaw;
+
+  try {
+    if (heuristicCheck && !heuristicCheck.isMalicious) {
+      // Common greeting / guaranteed clean query: skip remote threat check for sub-second speed
+      threatResult = heuristicCheck;
+      aiResponseRaw = await generateResponse(maskedText);
+    } else {
+      // Run threat classifier and response generator concurrently in parallel
+      const [tRes, rRes] = await Promise.all([
+        analyzeThreat(maskedText),
+        generateResponse(maskedText),
+      ]);
+      threatResult = tRes;
+      aiResponseRaw = rRes;
+    }
+  } catch (err) {
+    const errMsg = err?.message ?? String(err);
+    console.error('Generation error:', errMsg);
+    return res.status(502).json({
+      error: `AI service error: ${errMsg}`,
+    });
+  }
 
   const isHardBlock =
     (threatResult.isMalicious && threatResult.confidenceScore >= BLOCK_THRESHOLD) ||
@@ -61,22 +115,17 @@ export async function handleChat(req, res) {
       `[THREAT BLOCKED] user=${userId} category=${threatResult.category} confidence=${threatResult.confidenceScore} reason="${threatResult.reason}"`
     );
 
-    // Redact raw PII before database logging to guarantee zero data leakage into storage
     if (!zeroRetention) {
       const auditSafePrompt = entitiesFound > 0 ? redactForAuditLog(originalPrompt, tokenMap) : originalPrompt;
-      try {
-        await insertPromptLog({
-          userId,
-          originalPrompt: auditSafePrompt,
-          maskedPrompt: maskedText,
-          aiResponse: null,
-          status: 'blocked',
-          threatReason: `[${threatResult.category?.toUpperCase()}] ${threatResult.reason}`,
-          piiEntitiesFound: entitiesFound,
-        });
-      } catch (logErr) {
-        console.error('Log insert failed (blocked):', logErr.message);
-      }
+      insertPromptLog({
+        userId,
+        originalPrompt: auditSafePrompt,
+        maskedPrompt: maskedText,
+        aiResponse: null,
+        status: 'blocked',
+        threatReason: `[${threatResult.category?.toUpperCase()}] ${threatResult.reason}`,
+        piiEntitiesFound: entitiesFound,
+      }).catch(err => console.error('Log insert failed (blocked):', err.message));
     }
 
     return res.status(200).json({
@@ -92,18 +141,6 @@ export async function handleChat(req, res) {
     });
   }
 
-  // ── 4. Generate AI Response ──────────────────────────────────────
-  let aiResponseRaw;
-  try {
-    aiResponseRaw = await generateResponse(maskedText);
-  } catch (err) {
-    const errMsg = err?.message ?? String(err);
-    console.error('Generation error:', errMsg);
-    return res.status(502).json({
-      error: `AI service error: ${errMsg}`,
-    });
-  }
-
   // ── 5. Unmask PII in the AI Response ────────────────────────────
   const finalResponse = unmaskPII(aiResponseRaw, tokenMap);
 
@@ -113,23 +150,18 @@ export async function handleChat(req, res) {
     ? `[SOFT WARN – ${threatResult.category}] ${threatResult.reason}`
     : null;
 
-  // ── 6. Log to Supabase (Zero Data Leakage: PII sanitized before storage) ──
+  // ── 6. Non-Blocking Background Audit Logging (Zero Latency Added) ──
   if (!zeroRetention) {
     const auditSafePrompt = entitiesFound > 0 ? redactForAuditLog(originalPrompt, tokenMap) : originalPrompt;
-    try {
-      await insertPromptLog({
-        userId,
-        originalPrompt: auditSafePrompt,
-        maskedPrompt: maskedText,
-        aiResponse: finalResponse,
-        status,
-        threatReason: threatNote,
-        piiEntitiesFound: entitiesFound,
-      });
-    } catch (logErr) {
-      console.error('Log insert failed (passed/modified):', logErr.message);
-      // Don't fail the user — logging is best-effort
-    }
+    insertPromptLog({
+      userId,
+      originalPrompt: auditSafePrompt,
+      maskedPrompt: maskedText,
+      aiResponse: finalResponse,
+      status,
+      threatReason: threatNote,
+      piiEntitiesFound: entitiesFound,
+    }).catch(logErr => console.error('Background log insert failed:', logErr.message));
   }
 
   return res.status(200).json({
