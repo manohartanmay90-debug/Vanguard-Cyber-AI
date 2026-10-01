@@ -1,7 +1,8 @@
-# 🛡️ Aegis AI — Enterprise AI Firewall & Trust Dashboard
+# 🛡️ Vanguard Cyber AI — Enterprise AI Firewall & Trust Dashboard
 
+> 🌐 **Live Vercel Deployment:** [https://vanguard-cyber-ai-97er-ks65vqeei-tanmahy.vercel.app/](https://vanguard-cyber-ai-97er-ks65vqeei-tanmahy.vercel.app/)  
 > **Protect your enterprise. Trust your AI.**  
-> Aegis AI sits between your employees and public LLMs — intercepting threats, redacting PII, and giving administrators complete audit visibility.
+> Vanguard Cyber AI sits between your employees and public LLMs — intercepting threats, redacting PII in sub-millisecond memory, and providing real-time telemetry dashboards.
 
 ---
 

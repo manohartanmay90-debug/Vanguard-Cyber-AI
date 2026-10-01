@@ -2,6 +2,7 @@
   "name": "vanguard-cyber-ai",
   "version": "1.0.0",
   "description": "Vanguard Cyber AI - Enterprise AI Firewall and Threat Interception Platform",
+  "homepage": "https://vanguard-cyber-ai-97er-ks65vqeei-tanmahy.vercel.app/",
   "scripts": {
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
