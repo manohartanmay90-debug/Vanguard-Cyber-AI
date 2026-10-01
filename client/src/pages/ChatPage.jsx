@@ -13,6 +13,8 @@ import {
   PanelLeft, ChevronRight, Activity, ShieldCheck
 } from 'lucide-react';
 
+import CyberShieldOrb from '../components/CyberShieldOrb';
+
 const WELCOME_MESSAGES = [
   {
     role: 'assistant',
@@ -25,16 +27,70 @@ const WELCOME_MESSAGES = [
 function TypingIndicator() {
   return (
     <div className="flex gap-4 group animate-slide-up mb-7 items-start">
-      <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-500 via-indigo-500 to-sky-500 p-[1.5px] shadow-sm shrink-0 mt-0.5">
-        <div className="w-full h-full bg-white rounded-xl flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-blue-600 animate-spin" style={{ animationDuration: '3s' }} />
+      {/* Animated Rotating Radar Shield Icon */}
+      <div className="relative shrink-0 mt-0.5">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 p-[1.5px] shadow-md relative animate-pulse-glow">
+          <div className="w-full h-full bg-white rounded-xl flex items-center justify-center relative overflow-hidden">
+            <Shield className="w-4 h-4 text-blue-600 animate-float-subtle" />
+            <div className="absolute inset-0 bg-blue-500/10 rounded-xl animate-ping" style={{ animationDuration: '3s' }} />
+          </div>
         </div>
+        {/* Active scan radar dot */}
+        <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
+          <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+        </span>
       </div>
-      <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-        <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '300ms' }} />
-        <span className="text-xs text-slate-500 font-mono ml-2">Vanguard Sentinel scanning & synthesizing…</span>
+
+      {/* Cyber Threat Scanner HUD Card */}
+      <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm p-4 shadow-sm relative overflow-hidden max-w-md w-full">
+        {/* Scanning laser beam animation */}
+        <div className="absolute top-0 bottom-0 w-24 bg-gradient-to-r from-transparent via-blue-500/15 to-transparent pointer-events-none animate-laser-sweep" />
+
+        <div className="flex items-center gap-2 mb-2.5">
+          <div className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+          </div>
+          <span className="text-xs font-bold text-slate-800 font-mono tracking-wide">
+            VANGUARD SENTINEL SCANNER ACTIVE
+          </span>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-semibold ml-auto flex items-center gap-1">
+            <Activity className="w-3 h-3 text-blue-600 animate-pulse" />
+            LIVE SCAN
+          </span>
+        </div>
+
+        {/* Multi-step Sentinel Pipeline Indicators with micro-animations */}
+        <div className="grid grid-cols-3 gap-2 text-[10px] font-mono pt-2 border-t border-slate-100">
+          <div className="flex items-center gap-1.5 text-slate-600 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0 animate-bounce" style={{ animationDuration: '2s' }} />
+            <div className="leading-tight">
+              <span className="block font-semibold text-slate-800">PII Masker</span>
+              <span className="text-[9px] text-emerald-600 font-semibold">Active</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-slate-600 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+            <Cpu className="w-3.5 h-3.5 text-blue-600 shrink-0 animate-spin" style={{ animationDuration: '4s' }} />
+            <div className="leading-tight">
+              <span className="block font-semibold text-slate-800">Heuristics</span>
+              <span className="text-[9px] text-blue-600 font-semibold">Inspecting</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 text-slate-600 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+            <Lock className="w-3.5 h-3.5 text-amber-600 shrink-0 animate-pulse" />
+            <div className="leading-tight">
+              <span className="block font-semibold text-slate-800">Firewall</span>
+              <span className="text-[9px] text-amber-600 font-semibold">Zero-Trust</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Animated Cyber Progress Bar */}
+        <div className="w-full h-1 bg-slate-100 rounded-full mt-3 overflow-hidden relative">
+          <div className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-500 rounded-full w-2/3 animate-laser-sweep" />
+        </div>
       </div>
     </div>
   );
@@ -208,8 +264,11 @@ export default function ChatPage() {
 
             {/* Live Gateway Status Badge */}
             <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-slate-200">
-              <div className="badge-vanguard-pass">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="badge-vanguard-pass relative overflow-hidden group py-1">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
                 <span>Sentinel Gateway Active</span>
               </div>
             </div>
@@ -275,6 +334,9 @@ export default function ChatPage() {
         <div className="flex-1 overflow-y-auto px-6 sm:px-12 py-8 scroll-smooth">
           <div className="max-w-3xl xl:max-w-4xl mx-auto flex flex-col justify-between min-h-full">
             <div>
+              {/* Animated Holographic Cyber Defense Shield Visualizer for initial session */}
+              {messages.length <= 1 && <CyberShieldOrb />}
+
               {/* Chat Messages */}
               <div className="space-y-2">
                 {messages.map((msg, i) => (
@@ -400,7 +462,7 @@ export default function ChatPage() {
                     disabled={(!input.trim() && !attachedFile) || loading}
                     className={`w-9 h-9 rounded-xl flex items-center justify-center transition-standard shrink-0 ${
                       input.trim() && !loading
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:scale-105 active:scale-95'
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:scale-105 active:scale-95 animate-pulse-glow'
                         : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                     }`}
                   >

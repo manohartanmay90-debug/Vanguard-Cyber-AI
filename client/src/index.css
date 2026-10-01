@@ -203,3 +203,144 @@
     box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
   }
 }
+
+/* ── High-Performance Cyber & Radar Animations ── */
+@keyframes radar-sweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sonar-ping {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes cyber-scanline {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(300%);
+    opacity: 0;
+  }
+}
+
+@keyframes cyber-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes orbit-cw {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-ccw {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes float-subtle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes laser-sweep {
+  0% {
+    left: -20%;
+  }
+  100% {
+    left: 120%;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(16, 185, 129, 0.5), 0 0 35px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 4s linear infinite;
+}
+
+.animate-sonar-ping {
+  animation: sonar-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-cyber-scanline {
+  animation: cyber-scanline 2s ease-in-out infinite;
+}
+
+.animate-orbit-cw {
+  animation: orbit-cw 12s linear infinite;
+}
+
+.animate-orbit-ccw {
+  animation: orbit-ccw 18s linear infinite;
+}
+
+.animate-float-subtle {
+  animation: float-subtle 4s ease-in-out infinite;
+}
+
+.animate-laser-sweep {
+  animation: laser-sweep 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.shimmer-bg {
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: cyber-shimmer 2.5s infinite;
+}
+
+.cyber-grid-bg {
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, rgba(226, 232, 240, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+}
+

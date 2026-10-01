@@ -3,6 +3,7 @@ import {
   Shield, ShieldCheck, ShieldAlert, Activity, ChevronRight,
   TrendingUp, Lock, RefreshCw, X, Radio, Eye, Cpu
 } from 'lucide-react';
+import CyberRadarScope from './CyberRadarScope';
 
 export default function ThreatTelemetryPanel({ isOpen, onClose, stats }) {
   if (!isOpen) return null;
@@ -63,6 +64,9 @@ export default function ThreatTelemetryPanel({ isOpen, onClose, stats }) {
             <p className="text-[10px] text-slate-500 mt-1 font-medium">Zero unreviewed</p>
           </div>
         </div>
+
+        {/* Live Cyber Threat Radar Scope with 360° sweep animation */}
+        <CyberRadarScope />
 
         {/* Vector SVG Sparkline: Detections (Last 24h) */}
         <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">

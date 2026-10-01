@@ -173,29 +173,29 @@ export default function MessageBubble({ message }) {
     <div className="flex gap-4 group animate-slide-up mb-7 items-start">
       {/* Circular Branded Logo */}
       <div className="relative shrink-0 mt-0.5">
-        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-executive relative p-[1px] ${
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-sm relative p-[1px] ${
           isBlocked
             ? 'bg-gradient-to-tr from-rose-600 to-red-500'
             : 'bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500'
         }`}>
-          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
+          <div className="w-full h-full bg-white rounded-xl flex items-center justify-center">
             {isBlocked ? (
-              <ShieldAlert className="w-4 h-4 text-rose-400" />
+              <ShieldAlert className="w-4 h-4 text-rose-600" />
             ) : (
-              <Shield className="w-4 h-4 text-blue-400" />
+              <Shield className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
             )}
           </div>
         </div>
         {/* Active safety indicator */}
-        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#0a0d14]" />
+        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" />
       </div>
 
       <div className="flex-1 max-w-[88%]">
         {/* Assistant Header & Security Status Subtitle Block */}
         <div className="flex flex-wrap items-center gap-2 mb-2">
-          <span className="font-semibold text-slate-100 text-sm tracking-tight flex items-center gap-1.5">
+          <span className="font-semibold text-slate-900 text-sm tracking-tight flex items-center gap-1.5">
             Vanguard Cyber AI
-            <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700/60">
+            <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-slate-100 text-slate-500 border border-slate-200">
               Sentinel v2.5
             </span>
           </span>
@@ -203,17 +203,17 @@ export default function MessageBubble({ message }) {
           {/* Security Status Subtitle Block with green indicator dot */}
           {isPassed && (
             <div className="badge-vanguard-pass">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span>Passed</span>
-              <span className="text-emerald-500/70 text-[10px] hidden sm:inline">• Verified Safe</span>
+              <span className="text-emerald-700/70 text-[10px] hidden sm:inline">• Verified Safe</span>
             </div>
           )}
 
           {isModified && (
             <div className="badge-vanguard-warn">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               <span>Passed</span>
-              <span className="text-amber-400/80 text-[10px]">(PII Sanitized)</span>
+              <span className="text-amber-700/80 text-[10px]">(PII Sanitized)</span>
             </div>
           )}
 
@@ -221,13 +221,13 @@ export default function MessageBubble({ message }) {
             <div className="badge-vanguard-block">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
               <span>Quarantined</span>
-              <span className="text-rose-400/80 text-[10px]">• Threat Blocked</span>
+              <span className="text-rose-700/80 text-[10px]">• Threat Blocked</span>
             </div>
           )}
 
           {message.zeroRetention && (
-            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-950/40 border border-blue-500/25 text-blue-300 text-xs font-medium shadow-sm" title="Zero Retention Mode: Prompt was ephemeral and never saved to database">
-              <Lock className="w-3 h-3 text-blue-400" />
+            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium shadow-xs" title="Zero Retention Mode: Prompt was ephemeral and never saved to database">
+              <Lock className="w-3 h-3 text-amber-600" />
               <span>Zero-Retention</span>
             </div>
           )}
@@ -241,15 +241,15 @@ export default function MessageBubble({ message }) {
         }`}>
           {isBlocked ? (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-rose-400 font-semibold text-sm">
+              <div className="flex items-center gap-2 text-rose-700 font-semibold text-sm">
                 <ShieldAlert className="w-4 h-4 shrink-0" />
                 Enterprise Security Quarantine Triggered
               </div>
-              <p className="text-sm leading-relaxed text-rose-200/90">{message.content}</p>
+              <p className="text-sm leading-relaxed text-rose-800">{message.content}</p>
               {message.threatReason && (
-                <div className="mt-2.5 pt-2.5 border-t border-rose-500/20 bg-rose-500/[0.04] p-3 rounded-xl">
-                  <p className="text-[11px] uppercase tracking-wider text-rose-400 font-semibold">Firewall Audit Reason</p>
-                  <p className="text-xs text-rose-300/80 mt-1 font-mono">{message.threatReason}</p>
+                <div className="mt-2.5 pt-2.5 border-t border-rose-200 bg-rose-100/50 p-3 rounded-xl">
+                  <p className="text-[11px] uppercase tracking-wider text-rose-800 font-semibold">Firewall Audit Reason</p>
+                  <p className="text-xs text-rose-700 mt-1 font-mono">{message.threatReason}</p>
                 </div>
               )}
             </div>
