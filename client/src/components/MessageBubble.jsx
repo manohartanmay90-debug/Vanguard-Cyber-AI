@@ -40,7 +40,7 @@ function FormattedContent({ content }) {
   const parts = content.split(/(```[\s\S]*?```)/g);
 
   return (
-    <div className="space-y-3 leading-relaxed text-[14px] text-slate-200">
+    <div className="space-y-3 leading-relaxed text-[14px] text-slate-800">
       {parts.map((part, idx) => {
         if (part.startsWith('```') && part.endsWith('```')) {
           const lines = part.slice(3, -3).trim().split('\n');
@@ -50,15 +50,15 @@ function FormattedContent({ content }) {
           const codeBody = hasLang ? lines.slice(1).join('\n') : lines.join('\n');
 
           return (
-            <div key={idx} className="my-3 rounded-xl overflow-hidden border border-white/[0.08] bg-[#090a0e] shadow-lg">
-              <div className="flex items-center justify-between px-3.5 py-1.5 bg-white/[0.03] border-b border-white/[0.06] text-xs font-mono text-slate-400">
+            <div key={idx} className="my-3 rounded-xl overflow-hidden border border-slate-700 bg-[#0f172a] shadow-sm">
+              <div className="flex items-center justify-between px-3.5 py-1.5 bg-slate-800/80 border-b border-slate-700 text-xs font-mono text-slate-300">
                 <span className="flex items-center gap-1.5">
-                  <Terminal className="w-3.5 h-3.5 text-brand-400" />
+                  <Terminal className="w-3.5 h-3.5 text-blue-400" />
                   {lang}
                 </span>
                 <CopyButton text={codeBody} label="Copy code" />
               </div>
-              <pre className="p-3.5 overflow-x-auto text-[13px] font-mono text-emerald-300/90 leading-normal selection:bg-brand-500/30">
+              <pre className="p-3.5 overflow-x-auto text-[13px] font-mono text-emerald-300 leading-normal selection:bg-blue-500/30">
                 <code>{codeBody}</code>
               </pre>
             </div>
@@ -75,7 +75,7 @@ function FormattedContent({ content }) {
           if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
             const items = trimmed.split(/\n[-*]\s+/).filter(Boolean);
             return (
-              <ul key={pIdx} className="space-y-1.5 list-disc list-inside text-slate-300 pl-1">
+              <ul key={pIdx} className="space-y-1.5 list-disc list-inside text-slate-700 pl-1">
                 {items.map((item, itemIdx) => (
                   <li key={itemIdx} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(item) }} />
                 ))}
@@ -88,7 +88,7 @@ function FormattedContent({ content }) {
             return (
               <h3
                 key={pIdx}
-                className="text-base font-semibold text-white tracking-tight pt-1"
+                className="text-base font-semibold text-slate-900 tracking-tight pt-1"
                 dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed.replace(/^###\s+/, '')) }}
               />
             );
@@ -97,7 +97,7 @@ function FormattedContent({ content }) {
             return (
               <h2
                 key={pIdx}
-                className="text-lg font-bold text-white tracking-tight pt-1"
+                className="text-lg font-bold text-slate-900 tracking-tight pt-1"
                 dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed.replace(/^##\s+/, '')) }}
               />
             );
@@ -106,7 +106,7 @@ function FormattedContent({ content }) {
           return (
             <p
               key={pIdx}
-              className="leading-relaxed text-slate-200"
+              className="leading-relaxed text-slate-800"
               dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed) }}
             />
           );
@@ -119,9 +119,9 @@ function FormattedContent({ content }) {
 function renderInlineMarkdown(text) {
   return text
     // Bold
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-white">$1</strong>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-slate-900">$1</strong>')
     // Inline code
-    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-md bg-white/[0.08] text-brand-300 font-mono text-[12.5px] border border-white/[0.06]">$1</code>')
+    .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-md bg-slate-100 text-blue-700 font-mono text-[12.5px] border border-slate-200">$1</code>')
     // Newlines within paragraph
     .replace(/\n/g, '<br />');
 }
@@ -140,8 +140,8 @@ export default function MessageBubble({ message }) {
       <div className="flex justify-end gap-3 group animate-slide-up mb-6">
         <div className="max-w-[78%] flex flex-col items-end">
           {/* User Message Bubble */}
-          <div className="relative bg-[#111827] hover:bg-[#141d2f] border border-slate-800 rounded-2xl rounded-tr-sm px-5 py-3.5 text-slate-100 text-[14px] leading-relaxed shadow-executive transition-standard">
-            <p className="whitespace-pre-wrap selection:bg-blue-600/30">{message.content}</p>
+          <div className="relative bg-slate-100 hover:bg-slate-200/80 border border-slate-200 rounded-2xl rounded-tr-sm px-5 py-3.5 text-slate-900 text-[14px] leading-relaxed shadow-xs transition-standard">
+            <p className="whitespace-pre-wrap selection:bg-blue-200">{message.content}</p>
           </div>
 
           {/* Subtitle / Metadata row */}
@@ -234,10 +234,10 @@ export default function MessageBubble({ message }) {
         </div>
 
         {/* Message Content Container */}
-        <div className={`rounded-2xl rounded-tl-sm p-4 sm:p-5 shadow-executive transition-standard border ${
+        <div className={`rounded-2xl rounded-tl-sm p-4 sm:p-5 shadow-xs transition-standard border ${
           isBlocked
-            ? 'bg-rose-950/20 border-rose-500/30 text-rose-200'
-            : 'bg-[#0d121f] hover:bg-[#101626] border-slate-800 text-slate-200'
+            ? 'bg-rose-50 border-rose-200 text-rose-900'
+            : 'bg-white hover:bg-slate-50/50 border-slate-200 text-slate-800 shadow-sm'
         }`}>
           {isBlocked ? (
             <div className="space-y-3">

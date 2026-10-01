@@ -63,8 +63,8 @@ export default function AdminLogsPage() {
       {/* Page header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-slate-100 flex items-center gap-2">
-            <FileText className="w-6 h-6 text-brand-400" />
+          <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <FileText className="w-6 h-6 text-brand-600" />
             Audit Inspector
           </h2>
           <p className="text-slate-500 text-sm mt-1">
@@ -83,19 +83,19 @@ export default function AdminLogsPage() {
       </div>
 
       {/* Filter bar */}
-      <div className="glass-card p-4 mb-5 flex flex-wrap items-center gap-3">
-        <Filter className="w-4 h-4 text-slate-500 shrink-0" />
+      <div className="glass-card p-4 mb-5 flex flex-wrap items-center gap-3 bg-white">
+        <Filter className="w-4 h-4 text-slate-400 shrink-0" />
 
         {/* Search */}
         <div className="relative flex-1 min-w-48">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             id="log-search"
             type="text"
             placeholder="Search prompts, users…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="input-field pl-9 py-2 text-sm"
+            className="input-field pl-9 py-2 text-sm w-full"
           />
         </div>
 
@@ -104,7 +104,7 @@ export default function AdminLogsPage() {
           id="filter-status"
           value={statusFilter}
           onChange={e => setStatusFilter(e.target.value)}
-          className="input-field py-2 text-sm w-auto capitalize bg-surface-700/50"
+          className="input-field py-2 text-sm w-auto capitalize bg-white text-slate-800 border-slate-200"
         >
           {STATUS_OPTIONS.map(s => (
             <option key={s} value={s}>{s === 'all' ? 'All Statuses' : s.charAt(0).toUpperCase() + s.slice(1)}</option>
@@ -116,7 +116,7 @@ export default function AdminLogsPage() {
           id="filter-date"
           value={dateFilter}
           onChange={e => setDateFilter(e.target.value)}
-          className="input-field py-2 text-sm w-auto bg-surface-700/50"
+          className="input-field py-2 text-sm w-auto bg-white text-slate-800 border-slate-200"
         >
           {DATE_OPTIONS.map(({ label, value }) => (
             <option key={value} value={value}>{label}</option>
@@ -128,7 +128,7 @@ export default function AdminLogsPage() {
           <button
             id="reset-filters"
             onClick={() => { setStatusFilter('all'); setDateFilter('all'); setSearch(''); }}
-            className="text-xs text-brand-400 hover:text-brand-300 font-medium"
+            className="text-xs text-brand-600 hover:text-brand-700 font-medium"
           >
             Clear filters
           </button>

@@ -52,16 +52,16 @@ const SUGGESTIONS = [
 function TypingIndicator() {
   return (
     <div className="flex gap-4 group animate-slide-up mb-7 items-start">
-      <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 p-[1.5px] shadow-executive shrink-0 mt-0.5">
-        <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-blue-400 animate-spin" style={{ animationDuration: '3s' }} />
+      <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-500 via-indigo-500 to-sky-500 p-[1.5px] shadow-sm shrink-0 mt-0.5">
+        <div className="w-full h-full bg-white rounded-xl flex items-center justify-center">
+          <Sparkles className="w-4 h-4 text-blue-600 animate-spin" style={{ animationDuration: '3s' }} />
         </div>
       </div>
-      <div className="bg-[#0d121f] border border-slate-800 rounded-2xl rounded-tl-sm px-5 py-4 shadow-executive flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-        <span className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: '300ms' }} />
-        <span className="text-xs text-slate-400 font-mono ml-2">Vanguard Sentinel scanning & synthesizing…</span>
+      <div className="bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-5 py-4 shadow-sm flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+        <span className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+        <span className="text-xs text-slate-500 font-mono ml-2">Vanguard Sentinel scanning & synthesizing…</span>
       </div>
     </div>
   );
@@ -202,7 +202,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#030712] text-slate-100 font-sans select-none">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#f8fafc] text-slate-800 font-sans select-none">
       {/* ── 1. COLUMN 1: COLLAPSIBLE LEFT SIDEBAR ────────────────── */}
       <VanguardSidebar
         isCollapsed={isSidebarCollapsed}
@@ -214,13 +214,13 @@ export default function ChatPage() {
       />
 
       {/* ── 2. COLUMN 2: SPACIOUS CENTER CHAT FEED ───────────────── */}
-      <main className="flex-1 flex flex-col h-full min-w-0 bg-[#070a12] relative overflow-hidden select-text">
+      <main className="flex-1 flex flex-col h-full min-w-0 bg-[#f8fafc] relative overflow-hidden select-text">
         {/* Executive Top Bar */}
-        <header className="h-14 px-6 border-b border-slate-800 flex items-center justify-between shrink-0 bg-[#0a0d17]/80 backdrop-blur-md z-20">
+        <header className="h-14 px-6 border-b border-slate-200 flex items-center justify-between shrink-0 bg-white/90 backdrop-blur-md z-20">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsSidebarCollapsed(prev => !prev)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-standard"
+              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-standard"
               title="Toggle Left Sidebar"
             >
               <PanelLeft className="w-4 h-4" />
@@ -228,15 +228,15 @@ export default function ChatPage() {
 
             {/* Breadcrumb path */}
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-400">Dashboard</span>
-              <ChevronRight className="w-3 h-3 text-slate-600" />
-              <span className="font-semibold text-slate-200">Threat Response</span>
+              <span className="text-slate-500">Dashboard</span>
+              <ChevronRight className="w-3 h-3 text-slate-400" />
+              <span className="font-semibold text-slate-900">Threat Response</span>
             </div>
 
             {/* Live Gateway Status Badge */}
-            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-slate-800">
+            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-slate-200">
               <div className="badge-vanguard-pass">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Sentinel Gateway Active</span>
               </div>
             </div>
@@ -250,8 +250,8 @@ export default function ChatPage() {
               onClick={() => setZeroRetention(prev => !prev)}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-standard ${
                 zeroRetention
-                  ? 'bg-amber-500/15 border-amber-500/35 text-amber-300 shadow-sm'
-                  : 'bg-[#111827] border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  ? 'bg-amber-50 border-amber-200 text-amber-700 shadow-xs'
+                  : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
               title={
                 zeroRetention
@@ -259,19 +259,19 @@ export default function ChatPage() {
                   : 'Enable Zero-Retention: Prevents saving queries to the database'
               }
             >
-              <Lock className={`w-3 h-3 ${zeroRetention ? 'text-amber-400 animate-pulse' : 'text-slate-400'}`} />
+              <Lock className={`w-3 h-3 ${zeroRetention ? 'text-amber-600 animate-pulse' : 'text-slate-400'}`} />
               <span className="hidden md:inline">{zeroRetention ? 'Zero-Retention ON' : 'Zero-Retention OFF'}</span>
             </button>
 
             {/* Search History quick trigger */}
             <button
               onClick={() => setShowSearchHistory(true)}
-              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#111827] hover:bg-[#172033] border border-slate-800 text-xs font-medium text-slate-300 hover:text-white transition-standard"
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-xs font-medium text-slate-700 hover:text-slate-900 transition-standard shadow-xs"
               title="Search Prompt History (Ctrl+K)"
             >
               <Search className="w-3.5 h-3.5 text-slate-400" />
               <span>History</span>
-              <span className="text-[10px] text-blue-400 font-mono bg-slate-800 px-1 py-0.2 rounded">⌘K</span>
+              <span className="text-[10px] text-blue-600 font-mono bg-blue-50 border border-blue-200 px-1.5 py-0.2 rounded font-semibold">⌘K</span>
             </button>
 
             {/* Toggle Right Telemetry Panel */}
@@ -279,18 +279,18 @@ export default function ChatPage() {
               onClick={() => setShowTelemetry(prev => !prev)}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-medium transition-standard ${
                 showTelemetry
-                  ? 'bg-blue-600/15 text-blue-400 border-blue-500/30'
-                  : 'bg-[#111827] border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200 font-semibold'
+                  : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
               }`}
               title="Toggle Right Threat Detection Panel"
             >
-              <Activity className="w-3.5 h-3.5 text-blue-400" />
+              <Activity className="w-3.5 h-3.5 text-blue-600" />
               <span className="hidden sm:inline">Telemetry</span>
             </button>
 
             <button
               onClick={() => setShowSettings(true)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-standard"
+              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-standard"
               title="Gateway Parameters"
             >
               <Sliders className="w-4 h-4" />
@@ -305,15 +305,15 @@ export default function ChatPage() {
               {/* Empty / Welcome Hero State */}
               {messages.length <= 1 && (
                 <div className="pt-6 pb-10 text-center max-w-2xl mx-auto animate-fade-in">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 p-[1.5px] shadow-executive">
-                    <div className="w-full h-full bg-[#0a0d14] rounded-2xl flex items-center justify-center">
-                      <Shield className="w-7 h-7 text-blue-400" />
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 p-[1.5px] shadow-sm">
+                    <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
+                      <Shield className="w-7 h-7 text-blue-600" />
                     </div>
                   </div>
-                  <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                     Vanguard Cyber AI Command Center
                   </h1>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-lg mx-auto leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-500 mt-2 max-w-lg mx-auto leading-relaxed">
                     Zero-trust intelligence pipeline. Every message is scrubbed for PII leaks, credential exfiltration, and prompt injection attacks in real-time.
                   </p>
 
@@ -325,13 +325,13 @@ export default function ChatPage() {
                         <button
                           key={idx}
                           onClick={() => handleSubmit(item.prompt)}
-                          className="p-4 rounded-xl bg-[#111827] hover:bg-[#151c2e] border border-slate-800 hover:border-slate-700 text-left transition-standard group shadow-executive"
+                          className="p-4 rounded-xl bg-white hover:bg-slate-50/80 border border-slate-200 hover:border-blue-400 text-left transition-standard group shadow-xs"
                         >
-                          <div className="flex items-center gap-2 mb-1.5 text-xs font-semibold text-slate-200 group-hover:text-blue-300">
-                            <Icon className="w-4 h-4 text-blue-400 shrink-0" />
+                          <div className="flex items-center gap-2 mb-1.5 text-xs font-semibold text-slate-900 group-hover:text-blue-600">
+                            <Icon className="w-4 h-4 text-blue-600 shrink-0" />
                             {item.title}
                           </div>
-                          <p className="text-[12px] text-slate-400 line-clamp-2 leading-relaxed">
+                          <p className="text-[12px] text-slate-500 line-clamp-2 leading-relaxed">
                             {item.desc}
                           </p>
                         </button>
@@ -353,14 +353,14 @@ export default function ChatPage() {
 
             {/* Error Notification */}
             {error && (
-              <div className="my-4 p-4 rounded-xl bg-rose-950/20 border border-rose-500/30 text-rose-300 text-xs flex items-center justify-between shadow-executive animate-slide-up">
+              <div className="my-4 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between shadow-xs animate-slide-up">
                 <div className="flex items-center gap-2.5">
-                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                   <span>{error}</span>
                 </div>
                 <button
                   onClick={() => setError('')}
-                  className="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 text-xs transition-standard"
+                  className="px-2.5 py-1 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs transition-standard font-medium"
                 >
                   Dismiss
                 </button>
@@ -376,20 +376,20 @@ export default function ChatPage() {
           <div className="max-w-3xl xl:max-w-4xl mx-auto">
             {/* Attached file chip */}
             {attachedFile && (
-              <div className="mb-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#111827] border border-slate-800 text-xs text-slate-200 animate-slide-up">
-                <Paperclip className="w-3.5 h-3.5 text-blue-400" />
+              <div className="mb-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 animate-slide-up shadow-xs">
+                <Paperclip className="w-3.5 h-3.5 text-blue-600" />
                 <span className="font-medium truncate max-w-xs">{attachedFile.name}</span>
                 <button
                   onClick={() => setAttachedFile(null)}
-                  className="text-slate-400 hover:text-white ml-1 font-bold text-xs"
+                  className="text-slate-400 hover:text-slate-700 ml-1 font-bold text-xs"
                 >
                   ×
                 </button>
               </div>
             )}
 
-            {/* Flat, borderless container with deep slate styling */}
-            <div className="relative rounded-2xl bg-[#111827] border border-slate-800 hover:border-slate-700/80 focus-within:border-blue-500/40 p-3.5 shadow-executive-lg transition-standard">
+            {/* Flat, borderless container with white styling */}
+            <div className="relative rounded-2xl bg-white border border-slate-200 hover:border-slate-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 p-3.5 shadow-sm transition-standard">
               <textarea
                 id="chat-input"
                 ref={textareaRef}
@@ -399,11 +399,11 @@ export default function ChatPage() {
                 onKeyDown={handleKeyDown}
                 disabled={loading}
                 placeholder="Ask Vanguard Cyber AI or enter sensitive query (protected by firewall)…"
-                className="w-full bg-transparent text-slate-100 placeholder:text-slate-500 resize-none outline-none text-[14px] leading-relaxed disabled:opacity-50 min-h-[26px] max-h-44 border-none p-0 focus:ring-0 selection:bg-blue-600/30 font-sans"
+                className="w-full bg-transparent text-slate-900 placeholder:text-slate-400 resize-none outline-none text-[14px] leading-relaxed disabled:opacity-50 min-h-[26px] max-h-44 border-none p-0 focus:ring-0 selection:bg-blue-100 font-sans"
               />
 
               {/* Action Toolbar */}
-              <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-slate-800/80">
+              <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-slate-100">
                 {/* Left action icons */}
                 <div className="flex items-center gap-1.5">
                   <input
@@ -414,7 +414,7 @@ export default function ChatPage() {
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-standard"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-standard"
                     title="Attach security log or document"
                   >
                     <Paperclip className="w-4 h-4" />
@@ -422,14 +422,14 @@ export default function ChatPage() {
 
                   <button
                     onClick={() => setInput(prev => prev ? `${prev} (Audit strictly for credentials)` : 'Analyze the following code for security vulnerabilities:\n\n')}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-standard hidden sm:flex items-center gap-1 text-xs"
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-standard hidden sm:flex items-center gap-1 text-xs"
                     title="Insert prompt template"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                    <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                     <span>Templates</span>
                   </button>
 
-                  <div className="hidden sm:flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-semibold ml-1">
+                  <div className="hidden sm:flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-semibold ml-1">
                     <ShieldCheck className="w-3 h-3" />
                     <span>PII Masking ON</span>
                   </div>
@@ -440,8 +440,8 @@ export default function ChatPage() {
                     onClick={() => setZeroRetention(prev => !prev)}
                     className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-medium transition-standard ${
                       zeroRetention
-                        ? 'bg-amber-500/15 border-amber-500/35 text-amber-300 shadow-sm'
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                        ? 'bg-amber-50 border-amber-200 text-amber-700 shadow-xs'
+                        : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900'
                     }`}
                     title={
                       zeroRetention
@@ -449,14 +449,14 @@ export default function ChatPage() {
                         : 'Enable Zero-Retention Mode: prevents query history from being recorded in the database'
                     }
                   >
-                    <Lock className={`w-3 h-3 ${zeroRetention ? 'text-amber-400 animate-pulse' : 'text-slate-400'}`} />
+                    <Lock className={`w-3 h-3 ${zeroRetention ? 'text-amber-600 animate-pulse' : 'text-slate-400'}`} />
                     <span>{zeroRetention ? 'Zero-Retention: ON' : 'Zero-Retention: OFF'}</span>
                   </button>
                 </div>
 
                 {/* Right action icons & Send Button */}
                 <div className="flex items-center gap-3">
-                  <span className="text-[11px] text-slate-500 font-mono hidden sm:inline">
+                  <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
                     {input.length}/5000
                   </span>
 
@@ -466,8 +466,8 @@ export default function ChatPage() {
                     disabled={(!input.trim() && !attachedFile) || loading}
                     className={`w-9 h-9 rounded-xl flex items-center justify-center transition-standard shrink-0 ${
                       input.trim() && !loading
-                        ? 'bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-executive hover:scale-105 active:scale-95'
-                        : 'bg-slate-800 text-slate-600 cursor-not-allowed'
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:scale-105 active:scale-95'
+                        : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                     }`}
                   >
                     {loading ? (
@@ -483,7 +483,7 @@ export default function ChatPage() {
             {/* Sub-footer compliance disclaimer */}
             <div className="flex items-center justify-between text-[11px] text-slate-500 px-2 mt-2">
               <span className="flex items-center gap-1.5 font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
                 Vanguard Sentinel v2.5 • SOC2 Type II Certified
               </span>
               <span className="hidden sm:inline">

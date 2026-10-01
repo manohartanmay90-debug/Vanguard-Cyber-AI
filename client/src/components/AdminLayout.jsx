@@ -17,25 +17,25 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="h-screen flex bg-surface-900 overflow-hidden">
+    <div className="h-screen flex bg-[#f8fafc] overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 glass border-r border-white/5 flex flex-col shrink-0">
+      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0">
         {/* Brand */}
-        <div className="px-5 py-6 border-b border-white/5">
+        <div className="px-5 py-6 border-b border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center shadow-lg">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center shadow-sm">
               <Shield className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="font-bold text-slate-100 leading-none">Aegis AI</p>
-              <p className="text-xs text-brand-400 mt-0.5 font-medium">Admin Console</p>
+              <p className="font-bold text-slate-900 leading-none">Vanguard Cyber AI</p>
+              <p className="text-xs text-brand-600 mt-0.5 font-medium">Admin Console</p>
             </div>
           </div>
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-1">
-          <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider px-3 mb-3">Navigation</p>
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-3">Navigation</p>
           {navItems.map(({ to, label, Icon, end }) => (
             <NavLink
               key={to}
@@ -52,7 +52,7 @@ export default function AdminLayout() {
             </NavLink>
           ))}
 
-          <div className="pt-4 mt-4 border-t border-white/5">
+          <div className="pt-4 mt-4 border-t border-slate-100">
             <NavLink
               to="/chat"
               id="nav-chat"
@@ -66,22 +66,22 @@ export default function AdminLayout() {
         </nav>
 
         {/* User info */}
-        <div className="px-4 py-4 border-t border-white/5">
+        <div className="px-4 py-4 border-t border-slate-100">
           <div className="flex items-center gap-3 mb-3 px-2">
-            <div className="w-8 h-8 rounded-full bg-brand-600/30 flex items-center justify-center border border-brand-500/30">
-              <span className="text-xs font-bold text-brand-400">
+            <div className="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center border border-brand-200">
+              <span className="text-xs font-bold text-brand-700">
                 {profile?.email?.[0]?.toUpperCase() ?? 'A'}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-slate-300 font-medium truncate">{profile?.email}</p>
-              <p className="text-xs text-brand-400 font-semibold uppercase tracking-wider">Admin</p>
+              <p className="text-sm text-slate-800 font-medium truncate">{profile?.email}</p>
+              <p className="text-xs text-brand-600 font-semibold uppercase tracking-wider">Admin</p>
             </div>
           </div>
           <button
             id="admin-signout"
             onClick={handleSignOut}
-            className="sidebar-link w-full text-danger-400 hover:text-danger-300 hover:bg-danger-500/10"
+            className="sidebar-link w-full text-rose-600 hover:text-rose-700 hover:bg-rose-50"
           >
             <LogOut className="w-4 h-4" />
             Sign Out

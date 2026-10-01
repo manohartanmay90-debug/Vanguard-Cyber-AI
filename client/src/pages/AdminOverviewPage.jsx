@@ -78,7 +78,7 @@ export default function AdminOverviewPage() {
       {/* Page header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-slate-100">Security Overview</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Security Overview</h2>
           <p className="text-slate-500 text-sm mt-1">Real-time telemetry across all enterprise AI interactions</p>
         </div>
         <button
@@ -127,20 +127,20 @@ export default function AdminOverviewPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-6">
-            <TrendingUp className="w-5 h-5 text-brand-400" />
-            <h3 className="font-semibold text-slate-200">Request Distribution</h3>
+            <TrendingUp className="w-5 h-5 text-brand-600" />
+            <h3 className="font-semibold text-slate-800">Request Distribution</h3>
           </div>
           <div className="space-y-4">
-            <ActivityBar label="Passed (Safe)" count={stats?.passed ?? 0} total={stats?.total ?? 1} color="bg-success-500" />
-            <ActivityBar label="Modified (PII Masked)" count={stats?.modified ?? 0} total={stats?.total ?? 1} color="bg-warning-500" />
-            <ActivityBar label="Blocked (Threat)" count={stats?.blocked ?? 0} total={stats?.total ?? 1} color="bg-danger-500" />
+            <ActivityBar label="Passed (Safe)" count={stats?.passed ?? 0} total={stats?.total ?? 1} color="bg-emerald-500" />
+            <ActivityBar label="Modified (PII Masked)" count={stats?.modified ?? 0} total={stats?.total ?? 1} color="bg-amber-500" />
+            <ActivityBar label="Blocked (Threat)" count={stats?.blocked ?? 0} total={stats?.total ?? 1} color="bg-rose-500" />
           </div>
         </div>
 
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-6">
-            <Shield className="w-5 h-5 text-brand-400" />
-            <h3 className="font-semibold text-slate-200">Security Health</h3>
+            <Shield className="w-5 h-5 text-brand-600" />
+            <h3 className="font-semibold text-slate-800">Security Health</h3>
           </div>
           <div className="space-y-5">
             {/* Safety rate ring visualization */}
