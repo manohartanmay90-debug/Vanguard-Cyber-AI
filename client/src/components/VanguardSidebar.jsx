@@ -79,11 +79,10 @@ export default function VanguardSidebar({
           {/* Nav Icons */}
           <button
             onClick={() => navigate('/chat')}
-            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-standard ${
-              location.pathname === '/chat'
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-standard ${location.pathname === '/chat'
                 ? 'bg-blue-50 text-blue-600 border border-blue-200 font-semibold'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
+              }`}
             title="Chat Gateway"
           >
             <MessageSquare className="w-4 h-4" />
@@ -100,11 +99,10 @@ export default function VanguardSidebar({
           {isAdmin && (
             <button
               onClick={() => navigate('/admin')}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-standard ${
-                location.pathname.startsWith('/admin')
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-standard ${location.pathname.startsWith('/admin')
                   ? 'bg-blue-50 text-blue-600 border border-blue-200'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
+                }`}
               title="Admin Dashboard"
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -192,11 +190,10 @@ export default function VanguardSidebar({
                       setCurrentWorkspace(ws);
                       setWorkspaceMenu(false);
                     }}
-                    className={`w-full flex items-center justify-between p-2 rounded-lg text-xs transition-standard ${
-                      ws.id === currentWorkspace.id
+                    className={`w-full flex items-center justify-between p-2 rounded-lg text-xs transition-standard ${ws.id === currentWorkspace.id
                         ? 'bg-blue-50 text-blue-700 border border-blue-200 font-semibold'
                         : 'text-slate-700 hover:bg-slate-100'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-2 truncate">
                       <div className={`w-4 h-4 rounded bg-gradient-to-br ${ws.color} flex items-center justify-center text-[9px] font-bold text-white`}>
@@ -231,11 +228,10 @@ export default function VanguardSidebar({
             </span>
             <button
               onClick={() => navigate('/chat')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-standard ${
-                location.pathname === '/chat'
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-standard ${location.pathname === '/chat'
                   ? 'bg-blue-50 text-blue-700 border border-blue-200 font-semibold'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-              }`}
+                }`}
             >
               <MessageSquare className="w-3.5 h-3.5 text-blue-600" />
               <span>Chat Gateway</span>
@@ -255,11 +251,10 @@ export default function VanguardSidebar({
             {isAdmin && (
               <button
                 onClick={() => navigate('/admin')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-standard ${
-                  location.pathname.startsWith('/admin')
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-standard ${location.pathname.startsWith('/admin')
                     ? 'bg-blue-50 text-blue-700 border border-blue-200 font-semibold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                  }`}
               >
                 <LayoutDashboard className="w-3.5 h-3.5 text-slate-500" />
                 <span>Admin Dashboard</span>
@@ -299,22 +294,20 @@ export default function VanguardSidebar({
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="flex items-center gap-1.5 text-[10px] text-slate-500 font-mono">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            isBlocked
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isBlocked
                               ? 'bg-rose-500'
                               : isModified
-                              ? 'bg-amber-500'
-                              : 'bg-emerald-500'
-                          }`} />
+                                ? 'bg-amber-500'
+                                : 'bg-emerald-500'
+                            }`} />
                           {time}
                         </span>
-                        <span className={`text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded font-mono ${
-                          isBlocked
+                        <span className={`text-[9px] font-semibold uppercase px-1.5 py-0.2 rounded font-mono ${isBlocked
                             ? 'bg-rose-100 text-rose-700'
                             : isModified
-                            ? 'bg-amber-100 text-amber-700'
-                            : 'bg-emerald-100 text-emerald-700'
-                        }`}>
+                              ? 'bg-amber-100 text-amber-700'
+                              : 'bg-emerald-100 text-emerald-700'
+                          }`}>
                           {item.status}
                         </span>
                       </div>

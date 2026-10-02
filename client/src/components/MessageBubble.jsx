@@ -173,11 +173,10 @@ export default function MessageBubble({ message }) {
     <div className="flex gap-4 group animate-slide-up mb-7 items-start">
       {/* Circular Branded Logo */}
       <div className="relative shrink-0 mt-0.5">
-        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-sm relative p-[1px] ${
-          isBlocked
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-sm relative p-[1px] ${isBlocked
             ? 'bg-gradient-to-tr from-rose-600 to-red-500'
             : 'bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500'
-        }`}>
+          }`}>
           <div className="w-full h-full bg-white rounded-xl flex items-center justify-center">
             {isBlocked ? (
               <ShieldAlert className="w-4 h-4 text-rose-600" />
@@ -234,11 +233,10 @@ export default function MessageBubble({ message }) {
         </div>
 
         {/* Message Content Container */}
-        <div className={`rounded-2xl rounded-tl-sm p-4 sm:p-5 shadow-xs transition-standard border ${
-          isBlocked
+        <div className={`rounded-2xl rounded-tl-sm p-4 sm:p-5 shadow-xs transition-standard border ${isBlocked
             ? 'bg-rose-50 border-rose-200 text-rose-900'
             : 'bg-white hover:bg-slate-50/50 border-slate-200 text-slate-800 shadow-sm'
-        }`}>
+          }`}>
           {isBlocked ? (
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-rose-700 font-semibold text-sm">
@@ -265,18 +263,16 @@ export default function MessageBubble({ message }) {
             <div className="flex items-center gap-0.5 border-l border-white/[0.08] pl-2 ml-1">
               <button
                 onClick={() => setFeedback(feedback === 'up' ? null : 'up')}
-                className={`p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors ${
-                  feedback === 'up' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
-                }`}
+                className={`p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors ${feedback === 'up' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+                  }`}
                 title="Good response"
               >
                 <ThumbsUp className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setFeedback(feedback === 'down' ? null : 'down')}
-                className={`p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors ${
-                  feedback === 'down' ? 'text-rose-400' : 'text-slate-500 hover:text-slate-300'
-                }`}
+                className={`p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors ${feedback === 'down' ? 'text-rose-400' : 'text-slate-500 hover:text-slate-300'
+                  }`}
                 title="Poor response"
               >
                 <ThumbsDown className="w-3.5 h-3.5" />

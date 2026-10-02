@@ -280,11 +280,10 @@ export default function ChatPage() {
             <button
               type="button"
               onClick={() => setZeroRetention(prev => !prev)}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-standard ${
-                zeroRetention
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border transition-standard ${zeroRetention
                   ? 'bg-amber-50 border-amber-200 text-amber-700 shadow-xs'
                   : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-              }`}
+                }`}
               title={
                 zeroRetention
                   ? 'Zero-Retention Active: Prompts are never saved to the database (Ephemeral Mode)'
@@ -309,11 +308,10 @@ export default function ChatPage() {
             {/* Toggle Right Telemetry Panel */}
             <button
               onClick={() => setShowTelemetry(prev => !prev)}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-medium transition-standard ${
-                showTelemetry
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl border text-xs font-medium transition-standard ${showTelemetry
                   ? 'bg-blue-50 text-blue-700 border-blue-200 font-semibold'
                   : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
-              }`}
+                }`}
               title="Toggle Right Threat Detection Panel"
             >
               <Activity className="w-3.5 h-3.5 text-blue-600" />
@@ -434,11 +432,10 @@ export default function ChatPage() {
                   <button
                     type="button"
                     onClick={() => setZeroRetention(prev => !prev)}
-                    className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-medium transition-standard ${
-                      zeroRetention
+                    className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[11px] font-medium transition-standard ${zeroRetention
                         ? 'bg-amber-50 border-amber-200 text-amber-700 shadow-xs'
                         : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900'
-                    }`}
+                      }`}
                     title={
                       zeroRetention
                         ? 'Zero-Retention Active: Prompts and responses will NOT be logged to the database'
@@ -460,11 +457,10 @@ export default function ChatPage() {
                     id="send-btn"
                     onClick={() => handleSubmit()}
                     disabled={(!input.trim() && !attachedFile) || loading}
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-standard shrink-0 ${
-                      input.trim() && !loading
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center transition-standard shrink-0 ${input.trim() && !loading
                         ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:scale-105 active:scale-95 animate-pulse-glow'
                         : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                    }`}
+                      }`}
                   >
                     {loading ? (
                       <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
