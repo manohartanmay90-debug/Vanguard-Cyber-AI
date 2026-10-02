@@ -3,11 +3,20 @@
   "version": "1.0.0",
   "description": "Vanguard Cyber AI - Enterprise AI Firewall and Threat Interception Platform",
   "homepage": "https://vanguard-cyber-ai-97er-ks65vqeei-tanmahy.vercel.app/",
+  "type": "module",
   "scripts": {
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
     "install:all": "cd server && npm install && cd ../client && npm install",
     "setup": "npm run install:all",
     "build": "cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "zod": "^3.23.8"
   }
 }

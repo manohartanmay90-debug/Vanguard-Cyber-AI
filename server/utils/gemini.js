@@ -3,7 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 
 const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_API_KEY;
-const genAI = new GoogleGenAI({ apiKey });
+const genAI = apiKey ? new GoogleGenAI({ apiKey }) : new GoogleGenAI({ apiKey: 'placeholder' });
 
 // Prioritize ultra-fast flash-lite engines for instantaneous sub-second response
 const MODELS = ['gemini-3.5-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.1-flash-lite'];

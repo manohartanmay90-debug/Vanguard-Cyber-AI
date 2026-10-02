@@ -1,12 +1,41 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+/**
+ * Dynamic API Base resolution:
+ * - On HTTPS (e.g. Vercel production), securely uses relative '/api' to avoid Mixed Content errors.
+ * - On localhost in local development, uses 'http://localhost:3000/api' if not explicitly configured.
+ */
+export function getApiBase() {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+
+  if (typeof window !== 'undefined') {
+    // 1. If running on HTTPS (production Vercel)
+    if (window.location.protocol === 'https:') {
+      // Insecure http:// backend would cause Mixed Content block, so use same-origin /api
+      if (!envUrl || envUrl.startsWith('http://') || envUrl === '/api') {
+        return '/api';
+      }
+      return envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl;
+    }
+
+    // 2. If running locally on localhost
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      if (!envUrl || envUrl === '/api') {
+        return 'http://localhost:3000/api';
+      }
+      return envUrl.endsWith('/') ? envUrl.slice(0, -1) : envUrl;
+    }
+  }
+
+  return envUrl || '/api';
+}
 
 /**
- * Send a chat prompt to the Aegis AI backend.
+ * Send a chat prompt to the Vanguard Cyber AI backend.
  * @param {string} prompt
  * @param {string} accessToken - Supabase JWT
  */
 export async function sendChatPrompt(prompt, accessToken, zeroRetention = false) {
-  const res = await fetch(`${API_BASE}/chat`, {
+  const apiBase = getApiBase();
+  const res = await fetch(`${apiBase}/chat`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -14,6 +43,13 @@ export async function sendChatPrompt(prompt, accessToken, zeroRetention = false)
     },
     body: JSON.stringify({ prompt, zeroRetention }),
   });
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    const text = await res.text();
+    console.error('Server returned non-JSON:', text.slice(0, 150));
+    throw new Error(`Server returned unexpected response (status ${res.status}). Ensure API is reachable.`);
+  }
 
   const data = await res.json();
   if (!res.ok) {
@@ -27,7 +63,8 @@ export async function sendChatPrompt(prompt, accessToken, zeroRetention = false)
  * @param {string} accessToken
  */
 export async function fetchUserHistory(accessToken) {
-  const res = await fetch(`${API_BASE}/chat/history`, {
+  const apiBase = getApiBase();
+  const res = await fetch(`${apiBase}/chat/history`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   const data = await res.json();
@@ -40,7 +77,8 @@ export async function fetchUserHistory(accessToken) {
  * @param {string} accessToken
  */
 export async function clearAllUserHistory(accessToken) {
-  const res = await fetch(`${API_BASE}/chat/history`, {
+  const apiBase = getApiBase();
+  const res = await fetch(`${apiBase}/chat/history`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -55,7 +93,8 @@ export async function clearAllUserHistory(accessToken) {
  * @param {string} accessToken
  */
 export async function deleteHistoryRecord(recordId, accessToken) {
-  const res = await fetch(`${API_BASE}/chat/history/${recordId}`, {
+  const apiBase = getApiBase();
+  const res = await fetch(`${apiBase}/chat/history/${recordId}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${accessToken}` },
   });
@@ -68,7 +107,8 @@ export async function deleteHistoryRecord(recordId, accessToken) {
  * Fetch admin audit logs.
  */
 export async function fetchAdminLogs(accessToken) {
-  const res = await fetch(`${API_BASE}/admin/logs`, {
+  const apiBase = getApiBase();
+  const res = await fetch(`${apiBase}/admin/logs`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   const data = await res.json();
@@ -80,10 +120,12 @@ export async function fetchAdminLogs(accessToken) {
  * Fetch admin KPI stats.
  */
 export async function fetchAdminStats(accessToken) {
-  const res = await fetch(`${API_BASE}/admin/stats`, {
+  const apiBase = getApiBase();
+  const res = await fetch(`${apiBase}/admin/stats`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Failed to fetch stats');
   return data.stats;
 }
+
