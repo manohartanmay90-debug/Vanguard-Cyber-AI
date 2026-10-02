@@ -35,25 +35,33 @@ export function getApiBase() {
  */
 export async function sendChatPrompt(prompt, accessToken, zeroRetention = false) {
   const apiBase = getApiBase();
-  const res = await fetch(`${apiBase}/chat`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify({ prompt, zeroRetention }),
-  });
+  const url = `${apiBase}/chat`;
+  
+  let res;
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ prompt, zeroRetention }),
+    });
+  } catch (err) {
+    console.error(`Network Error fetching ${url}:`, err);
+    throw new Error(`Network Error: ${err.message}. (Attempted URL: ${url})`);
+  }
 
   const contentType = res.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
     const text = await res.text();
     console.error('Server returned non-JSON:', text.slice(0, 150));
-    throw new Error(`Server returned unexpected response (status ${res.status}). Ensure API is reachable.`);
+    throw new Error(`Server returned HTML/Text (status ${res.status}). Ensure API is reachable. URL: ${url}`);
   }
 
   const data = await res.json();
   if (!res.ok) {
-    throw new Error(data.error || 'Failed to send prompt');
+    throw new Error(data.error || `HTTP ${res.status} error from server`);
   }
   return data;
 }
