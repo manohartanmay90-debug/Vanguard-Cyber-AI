@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
+import LandingPage from './pages/LandingPage';
 import ChatPage from './pages/ChatPage';
 import AdminOverviewPage from './pages/AdminOverviewPage';
 import AdminLogsPage from './pages/AdminLogsPage';
@@ -44,7 +45,8 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LandingPage />} />
           <Route
             path="/chat"
             element={
