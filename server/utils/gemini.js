@@ -121,6 +121,16 @@ export async function analyzeThreat(prompt) {
     }
   }
 
+  // If Gemini models fail, attempt Groq fallback if GROQ_API_KEY is available
+  if (process.env.GROQ_API_KEY) {
+    try {
+      const { analyzeThreat: groqThreat } = await import('./groq.js');
+      return await groqThreat(prompt);
+    } catch (groqErr) {
+      console.warn('Groq threat fallback error:', groqErr?.message ?? groqErr);
+    }
+  }
+
   console.error('All threat analysis attempts failed:', lastError?.message ?? lastError);
   return {
     isMalicious: false,
@@ -163,6 +173,16 @@ export async function generateResponse(maskedPrompt, history = []) {
     } catch (err) {
       lastError = err;
       console.warn(`Generation fallback from ${model}:`, err?.message?.slice(0, 80) ?? err);
+    }
+  }
+
+  // If Gemini models fail, attempt Groq fallback if GROQ_API_KEY is available
+  if (process.env.GROQ_API_KEY) {
+    try {
+      const { generateResponse: groqGenerate } = await import('./groq.js');
+      return await groqGenerate(maskedPrompt, history);
+    } catch (groqErr) {
+      console.warn('Groq response generation fallback error:', groqErr?.message ?? groqErr);
     }
   }
 

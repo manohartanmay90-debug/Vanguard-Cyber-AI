@@ -13,6 +13,7 @@ const EnvSchema = z.object({
   SUPABASE_URL: z.string().optional().default('https://kgwhrftenthdtoeffhfa.supabase.co'),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   GEMINI_API_KEY: z.string().optional(),
+  GROQ_API_KEY: z.string().optional(),
 });
 
 const envResult = EnvSchema.safeParse(process.env);
