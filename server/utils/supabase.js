@@ -1,8 +1,18 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config();
+
 import { createClient } from '@supabase/supabase-js';
 
+const DEFAULT_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtnd2hyZnRlbnRoZHRvZWZmaGZhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4Mjc2MjksImV4cCI6MjEwNjQwMzYyOX0.PY3kEGG3fKsxfFVS_8rcxBUpxJSzBlNY-9HaV06_Xjc';
 const supabaseUrl = process.env.SUPABASE_URL || 'https://kgwhrftenthdtoeffhfa.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || 'placeholder';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY || DEFAULT_ANON_KEY;
 
 // Service-role client bypasses RLS for admin operations
 export const supabaseAdmin = createClient(
@@ -22,11 +32,33 @@ export const supabaseAdmin = createClient(
  * @returns {Promise<import('@supabase/supabase-js').User>}
  */
 export async function verifyToken(token) {
-  const { data, error } = await supabaseAdmin.auth.getUser(token);
-  if (error || !data.user) {
-    throw new Error('Invalid or expired token');
+  if (!token) throw new Error('Missing token');
+
+  // 1. Try with supabaseAdmin client
+  try {
+    const { data, error } = await supabaseAdmin.auth.getUser(token);
+    if (!error && data?.user) {
+      return data.user;
+    }
+  } catch (err) {
+    console.warn('supabaseAdmin.auth.getUser error:', err?.message);
   }
-  return data.user;
+
+  // 2. Fallback: verify using fresh client with bearer token header
+  try {
+    const client = createClient(supabaseUrl, DEFAULT_ANON_KEY, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+    const { data, error } = await client.auth.getUser(token);
+    if (!error && data?.user) {
+      return data.user;
+    }
+  } catch (fallbackErr) {
+    console.warn('Fallback token verify error:', fallbackErr?.message);
+  }
+
+  throw new Error('Invalid or expired token');
 }
 
 /**

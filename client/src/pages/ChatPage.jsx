@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 import { sendChatPrompt } from '../lib/api';
 import MessageBubble from '../components/MessageBubble';
 import VanguardSidebar from '../components/VanguardSidebar';
@@ -196,8 +197,22 @@ export default function ChatPage() {
     };
     setMessages(prev => [...prev, userMsg]);
 
+    let tokenToUse = accessToken;
     try {
-      const data = await sendChatPrompt(fullPrompt, accessToken, zeroRetention);
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (sessionData?.session?.access_token) {
+        tokenToUse = sessionData.session.access_token;
+      }
+    } catch {}
+
+    if (!tokenToUse) {
+      setError('Session expired or unauthorized. Please sign in again.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await sendChatPrompt(fullPrompt, tokenToUse, zeroRetention);
 
       const assistantMsg = {
         role: 'assistant',
