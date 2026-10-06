@@ -12,11 +12,11 @@ import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 
 function getGenAI() {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_API_KEY;
-  if (!apiKey || apiKey.trim() === '' || apiKey === 'placeholder' || apiKey === 'your_gemini_api_key_here') {
+  const apiKey = (process.env.GEMINI_API_KEY || process.env.gemini_API_KEY || '').trim();
+  if (!apiKey || apiKey === 'placeholder' || apiKey === 'your_gemini_api_key_here' || !apiKey.startsWith('AIzaSy')) {
     return null;
   }
-  return new GoogleGenAI({ apiKey: apiKey.trim() });
+  return new GoogleGenAI({ apiKey });
 }
 
 // Prioritize ultra-fast flash-lite engines for instantaneous sub-second response
