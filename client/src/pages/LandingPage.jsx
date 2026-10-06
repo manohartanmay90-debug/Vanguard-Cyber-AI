@@ -7,6 +7,7 @@ import {
   Terminal, ArrowRight, CheckCircle2, Sparkles, Activity,
   Database, Eye, EyeOff, Mail, AlertCircle, X, ChevronRight
 } from 'lucide-react';
+import CyberLaserGridBackground from '../components/CyberLaserGridBackground';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -91,13 +92,8 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen w-full bg-[#f8fafc] text-slate-900 font-sans selection:bg-blue-100 flex flex-col relative overflow-x-hidden">
-      {/* Background Ambient Grid & Radial Glows */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-60" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-blue-500/10 via-indigo-500/5 to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-1/3 -left-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl" />
-      </div>
+      {/* ── 3D CYBER LASER GRID & SCANLINE BACKGROUND ──────────────── */}
+      <CyberLaserGridBackground />
 
       {/* ── 1. EXECUTIVE NAVIGATION BAR ───────────────────────────── */}
       <header className="w-full h-16 border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-40 px-6 sm:px-12 flex items-center justify-between">
