@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 const WORKSPACES = [
-  { id: 'prod', name: 'Aegis Enterprise (Prod)', tier: 'SOC2 Type II', active: true, color: 'from-brand-500 to-indigo-600' },
+  { id: 'prod', name: 'Vanguard Enterprise (Prod)', tier: 'SOC2 Type II', active: true, color: 'from-brand-500 to-indigo-600' },
   { id: 'secops', name: 'SecOps Threat Hunting', tier: 'High Sensitivity', active: false, color: 'from-emerald-500 to-teal-600' },
   { id: 'sandbox', name: 'Developer Sandbox', tier: 'Debug Enclave', active: false, color: 'from-amber-500 to-orange-600' },
 ];

@@ -68,7 +68,7 @@ export async function insertPromptLog({
       const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(userId);
       await supabaseAdmin.from('profiles').upsert({
         id: userId,
-        email: authUser?.user?.email || 'user@aegis.ai',
+        email: authUser?.user?.email || 'user@vanguardcyber.ai',
         role: 'employee',
       });
     }

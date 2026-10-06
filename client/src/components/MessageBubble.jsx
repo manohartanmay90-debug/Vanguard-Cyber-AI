@@ -1,26 +1,33 @@
 import { useState } from 'react';
 import {
   Shield, ShieldCheck, ShieldAlert, Copy, Check,
-  Sparkles, ThumbsUp, ThumbsDown, Terminal, Info, ExternalLink, Lock
+  Sparkles, ThumbsUp, ThumbsDown, Terminal, Info,
+  Volume2, VolumeX, RotateCcw, ChevronDown, ChevronRight,
+  Cpu, Lock, Activity, Share2, CheckCheck
 } from 'lucide-react';
 
 function CopyButton({ text, label = '' }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      console.error('Clipboard copy failed', e);
+    }
   };
+
   return (
     <button
       onClick={copy}
-      className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-white/[0.08] text-slate-400 hover:text-slate-200 text-xs transition-all duration-150"
-      title="Copy message"
+      className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 text-xs transition-standard"
+      title="Copy to clipboard"
     >
       {copied ? (
         <>
-          <Check className="w-3.5 h-3.5 text-emerald-400" />
-          {label && <span className="text-emerald-400 font-medium">Copied</span>}
+          <Check className="w-3.5 h-3.5 text-emerald-600" />
+          <span className="text-emerald-600 font-medium">Copied</span>
         </>
       ) : (
         <>
@@ -32,7 +39,7 @@ function CopyButton({ text, label = '' }) {
   );
 }
 
-// Formats content with lightweight markdown parser for clean developer hierarchy
+// Formats content with lightweight markdown parser for clean ChatGPT-style hierarchy
 function FormattedContent({ content }) {
   if (!content) return null;
 
@@ -40,7 +47,7 @@ function FormattedContent({ content }) {
   const parts = content.split(/(```[\s\S]*?```)/g);
 
   return (
-    <div className="space-y-3 leading-relaxed text-[14px] text-slate-800">
+    <div className="space-y-3 leading-relaxed text-[14.5px] text-slate-800">
       {parts.map((part, idx) => {
         if (part.startsWith('```') && part.endsWith('```')) {
           const lines = part.slice(3, -3).trim().split('\n');
@@ -50,22 +57,22 @@ function FormattedContent({ content }) {
           const codeBody = hasLang ? lines.slice(1).join('\n') : lines.join('\n');
 
           return (
-            <div key={idx} className="my-3 rounded-xl overflow-hidden border border-slate-700 bg-[#0f172a] shadow-sm">
-              <div className="flex items-center justify-between px-3.5 py-1.5 bg-slate-800/80 border-b border-slate-700 text-xs font-mono text-slate-300">
-                <span className="flex items-center gap-1.5">
+            <div key={idx} className="my-3.5 rounded-xl overflow-hidden border border-slate-800 bg-[#0d1117] shadow-md font-mono">
+              <div className="flex items-center justify-between px-4 py-2 bg-[#161b22] border-b border-slate-800 text-xs text-slate-400">
+                <div className="flex items-center gap-2">
                   <Terminal className="w-3.5 h-3.5 text-blue-400" />
-                  {lang}
-                </span>
+                  <span className="font-semibold text-slate-300 uppercase tracking-wider text-[11px]">{lang}</span>
+                </div>
                 <CopyButton text={codeBody} label="Copy code" />
               </div>
-              <pre className="p-3.5 overflow-x-auto text-[13px] font-mono text-emerald-300 leading-normal selection:bg-blue-500/30">
+              <pre className="p-4 overflow-x-auto text-[13px] leading-relaxed text-slate-100 font-mono selection:bg-blue-600/40">
                 <code>{codeBody}</code>
               </pre>
             </div>
           );
         }
 
-        // Render regular markdown paragraphs with bold, inline code, and lists
+        // Render regular markdown paragraphs with bold, inline code, headers, and lists
         const paragraphs = part.split(/\n\n+/);
         return paragraphs.map((p, pIdx) => {
           const trimmed = p.trim();
@@ -75,11 +82,23 @@ function FormattedContent({ content }) {
           if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
             const items = trimmed.split(/\n[-*]\s+/).filter(Boolean);
             return (
-              <ul key={pIdx} className="space-y-1.5 list-disc list-inside text-slate-700 pl-1">
+              <ul key={pIdx} className="space-y-1.5 list-disc list-outside ml-5 text-slate-700">
                 {items.map((item, itemIdx) => (
                   <li key={itemIdx} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(item) }} />
                 ))}
               </ul>
+            );
+          }
+
+          // Numbered lists
+          if (/^\d+\.\s+/.test(trimmed)) {
+            const items = trimmed.split(/\n\d+\.\s+/).filter(Boolean);
+            return (
+              <ol key={pIdx} className="space-y-1.5 list-decimal list-outside ml-5 text-slate-700">
+                {items.map((item, itemIdx) => (
+                  <li key={itemIdx} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(item) }} />
+                ))}
+              </ol>
             );
           }
 
@@ -88,7 +107,7 @@ function FormattedContent({ content }) {
             return (
               <h3
                 key={pIdx}
-                className="text-base font-semibold text-slate-900 tracking-tight pt-1"
+                className="text-base font-bold text-slate-900 tracking-tight pt-2 pb-0.5"
                 dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed.replace(/^###\s+/, '')) }}
               />
             );
@@ -97,8 +116,28 @@ function FormattedContent({ content }) {
             return (
               <h2
                 key={pIdx}
-                className="text-lg font-bold text-slate-900 tracking-tight pt-1"
+                className="text-lg font-bold text-slate-900 tracking-tight pt-3 pb-1 border-b border-slate-100"
                 dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed.replace(/^##\s+/, '')) }}
+              />
+            );
+          }
+          if (trimmed.startsWith('# ')) {
+            return (
+              <h1
+                key={pIdx}
+                className="text-xl font-extrabold text-slate-900 tracking-tight pt-3 pb-1"
+                dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed.replace(/^#\s+/, '')) }}
+              />
+            );
+          }
+
+          // Blockquotes
+          if (trimmed.startsWith('> ')) {
+            return (
+              <blockquote
+                key={pIdx}
+                className="border-l-4 border-blue-500 pl-3.5 py-1 my-2 bg-blue-50/50 rounded-r-lg text-slate-700 text-sm italic"
+                dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed.replace(/^>\s+/, '')) }}
               />
             );
           }
@@ -120,46 +159,71 @@ function renderInlineMarkdown(text) {
   return text
     // Bold
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-slate-900">$1</strong>')
+    // Italics
+    .replace(/\*([^*]+)\*/g, '<em class="italic text-slate-700">$1</em>')
     // Inline code
     .replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded-md bg-slate-100 text-blue-700 font-mono text-[12.5px] border border-slate-200">$1</code>')
     // Newlines within paragraph
     .replace(/\n/g, '<br />');
 }
 
-export default function MessageBubble({ message }) {
+export default function MessageBubble({ message, onRegenerate }) {
   const isUser = message.role === 'user';
   const isBlocked = message.status === 'blocked';
   const isModified = message.status === 'modified';
   const isPassed = message.status === 'passed' || (!isBlocked && !isModified);
 
   const [feedback, setFeedback] = useState(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [showThinking, setShowThinking] = useState(false);
+
+  // Text-to-Speech handler
+  const handleToggleSpeak = () => {
+    if (!('speechSynthesis' in window)) {
+      alert('Speech synthesis is not supported in this browser.');
+      return;
+    }
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(message.content);
+      utterance.rate = 1.0;
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      setIsSpeaking(true);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   // ── USER MESSAGE ──────────────────────────────────────────────
   if (isUser) {
     return (
       <div className="flex justify-end gap-3 group animate-slide-up mb-6">
-        <div className="max-w-[78%] flex flex-col items-end">
+        <div className="max-w-[82%] md:max-w-[75%] flex flex-col items-end">
           {/* User Message Bubble */}
-          <div className="relative bg-slate-100 hover:bg-slate-200/80 border border-slate-200 rounded-2xl rounded-tr-sm px-5 py-3.5 text-slate-900 text-[14px] leading-relaxed shadow-xs transition-standard">
-            <p className="whitespace-pre-wrap selection:bg-blue-200">{message.content}</p>
+          <div className="relative bg-slate-100 hover:bg-slate-200/90 text-slate-900 rounded-2xl rounded-tr-sm px-5 py-3 text-[14.5px] leading-relaxed shadow-xs border border-slate-200/80 transition-standard">
+            <p className="whitespace-pre-wrap selection:bg-blue-200 font-normal">{message.content}</p>
           </div>
 
           {/* Subtitle / Metadata row */}
-          <div className="flex items-center gap-2 mt-1.5 px-1 text-xs text-slate-500">
+          <div className="flex items-center gap-2 mt-1.5 px-1 text-xs text-slate-400">
             {message.zeroRetention && (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-950/40 border border-blue-500/25 text-blue-300 font-medium text-[11px]" title="Zero-Retention active: this query is never written to the database">
-                <Lock className="w-3 h-3 text-blue-400" />
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 font-medium text-[11px]" title="Zero-Retention active: query was ephemeral">
+                <Lock className="w-3 h-3 text-amber-600" />
                 Zero-Retention
               </span>
             )}
             {message.piiMasked > 0 && (
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 font-medium text-[11px]">
-                <Shield className="w-3 h-3" />
-                {message.piiMasked} PII token{message.piiMasked > 1 ? 's' : ''} masked
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-medium text-[11px]">
+                <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                {message.piiMasked} PII sanitized
               </span>
             )}
             <CopyButton text={message.content} />
-            <span className="font-mono text-[11px]">
+            <span className="font-mono text-[11px] text-slate-400">
               {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
             </span>
           </div>
@@ -168,86 +232,116 @@ export default function MessageBubble({ message }) {
     );
   }
 
-  // ── ASSISTANT MESSAGE ─────────────────────────────────────────
+  // ── ASSISTANT MESSAGE (ChatGPT Style) ─────────────────────────
   return (
-    <div className="flex gap-4 group animate-slide-up mb-7 items-start">
-      {/* Circular Branded Logo */}
+    <div className="flex gap-3.5 group animate-slide-up mb-7 items-start">
+      {/* ChatGPT Style Avatar Icon */}
       <div className="relative shrink-0 mt-0.5">
-        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-sm relative p-[1px] ${isBlocked
-            ? 'bg-gradient-to-tr from-rose-600 to-red-500'
-            : 'bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500'
-          }`}>
-          <div className="w-full h-full bg-white rounded-xl flex items-center justify-center">
-            {isBlocked ? (
-              <ShieldAlert className="w-4 h-4 text-rose-600" />
-            ) : (
-              <Shield className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
-            )}
-          </div>
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-xs transition-transform ${
+          isBlocked
+            ? 'bg-rose-100 border border-rose-300 text-rose-600'
+            : 'bg-slate-900 text-white border border-slate-700'
+        }`}>
+          {isBlocked ? (
+            <ShieldAlert className="w-4 h-4 text-rose-600" />
+          ) : (
+            <Shield className="w-4 h-4 text-white" />
+          )}
         </div>
-        {/* Active safety indicator */}
-        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white" />
+        {/* Status dot */}
+        <span className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
+          isBlocked ? 'bg-rose-500' : 'bg-emerald-500'
+        }`} />
       </div>
 
-      <div className="flex-1 max-w-[88%]">
-        {/* Assistant Header & Security Status Subtitle Block */}
-        <div className="flex flex-wrap items-center gap-2 mb-2">
-          <span className="font-semibold text-slate-900 text-sm tracking-tight flex items-center gap-1.5">
-            Vanguard Cyber AI
-            <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-slate-100 text-slate-500 border border-slate-200">
-              Sentinel v2.5
-            </span>
+      <div className="flex-1 max-w-[92%]">
+        {/* Assistant Header & Status Indicators */}
+        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+          <span className="font-bold text-slate-900 text-sm tracking-tight flex items-center gap-1.5">
+            Vanguard
+            <span className="font-normal text-xs text-slate-500 font-mono">4o</span>
           </span>
 
-          {/* Security Status Subtitle Block with green indicator dot */}
+          {/* Security Status Subtitle Block */}
           {isPassed && (
             <div className="badge-vanguard-pass">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Passed</span>
-              <span className="text-emerald-700/70 text-[10px] hidden sm:inline">• Verified Safe</span>
+              <span>Verified Safe</span>
             </div>
           )}
 
           {isModified && (
             <div className="badge-vanguard-warn">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-              <span>Passed</span>
-              <span className="text-amber-700/80 text-[10px]">(PII Sanitized)</span>
+              <span>PII Scrubbed</span>
             </div>
           )}
 
           {isBlocked && (
             <div className="badge-vanguard-block">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-              <span>Quarantined</span>
-              <span className="text-rose-700/80 text-[10px]">• Threat Blocked</span>
+              <span>Threat Blocked</span>
             </div>
           )}
 
           {message.zeroRetention && (
-            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium shadow-xs" title="Zero Retention Mode: Prompt was ephemeral and never saved to database">
-              <Lock className="w-3 h-3 text-amber-600" />
-              <span>Zero-Retention</span>
+            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[11px] font-medium">
+              <Lock className="w-2.5 h-2.5 text-amber-600" />
+              <span>Ephemeral</span>
+            </div>
+          )}
+        </div>
+
+        {/* ChatGPT / OpenAI o1 Style Thought / Sentinel Inspection Dropdown */}
+        <div className="mb-2">
+          <button
+            onClick={() => setShowThinking(prev => !prev)}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200/70 text-slate-600 text-xs font-mono transition-standard group/thought"
+          >
+            {showThinking ? <ChevronDown className="w-3.5 h-3.5 text-slate-400" /> : <ChevronRight className="w-3.5 h-3.5 text-slate-400" />}
+            <span className="flex items-center gap-1 font-sans text-[11px] font-medium text-slate-600 group-hover/thought:text-slate-900">
+              <Activity className="w-3 h-3 text-blue-600" />
+              Sentinel Threat Inspection (Sub-second)
+            </span>
+          </button>
+
+          {showThinking && (
+            <div className="mt-2 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1.5 animate-slide-up font-mono">
+              <div className="flex items-center justify-between text-[11px] border-b border-slate-200 pb-1.5">
+                <span className="text-slate-500 font-sans">Heuristic Status</span>
+                <span className={`font-bold ${isBlocked ? 'text-rose-600' : 'text-emerald-600'}`}>
+                  {isBlocked ? 'QUARANTINED' : 'PASSED (0 Malicious Triggers)'}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-slate-500 font-sans">PII Entities Masked</span>
+                <span className="text-slate-800 font-bold">{message.piiMasked || 0}</span>
+              </div>
+              <div className="flex items-center justify-between text-[11px]">
+                <span className="text-slate-500 font-sans">Zero Retention Mode</span>
+                <span className="text-slate-800">{message.zeroRetention ? 'Enabled (No logs retained)' : 'Disabled'}</span>
+              </div>
             </div>
           )}
         </div>
 
         {/* Message Content Container */}
-        <div className={`rounded-2xl rounded-tl-sm p-4 sm:p-5 shadow-xs transition-standard border ${isBlocked
-            ? 'bg-rose-50 border-rose-200 text-rose-900'
-            : 'bg-white hover:bg-slate-50/50 border-slate-200 text-slate-800 shadow-sm'
-          }`}>
+        <div className={`p-4 rounded-2xl transition-standard ${
+          isBlocked
+            ? 'bg-rose-50 border border-rose-200 text-rose-900'
+            : 'bg-white border border-slate-200/90 text-slate-800 shadow-xs'
+        }`}>
           {isBlocked ? (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-rose-700 font-semibold text-sm">
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-2 text-rose-700 font-bold text-sm">
                 <ShieldAlert className="w-4 h-4 shrink-0" />
                 Enterprise Security Quarantine Triggered
               </div>
               <p className="text-sm leading-relaxed text-rose-800">{message.content}</p>
               {message.threatReason && (
-                <div className="mt-2.5 pt-2.5 border-t border-rose-200 bg-rose-100/50 p-3 rounded-xl">
-                  <p className="text-[11px] uppercase tracking-wider text-rose-800 font-semibold">Firewall Audit Reason</p>
-                  <p className="text-xs text-rose-700 mt-1 font-mono">{message.threatReason}</p>
+                <div className="mt-2 pt-2 border-t border-rose-200 bg-rose-100/50 p-2.5 rounded-xl font-mono text-xs text-rose-800">
+                  <span className="font-semibold block text-[10px] uppercase tracking-wider">Firewall Detection Reason:</span>
+                  <span className="mt-0.5 block">{message.threatReason}</span>
                 </div>
               )}
             </div>
@@ -256,23 +350,46 @@ export default function MessageBubble({ message }) {
           )}
         </div>
 
-        {/* Action & Metadata Footer */}
-        <div className="flex items-center justify-between mt-2 px-1 text-xs text-slate-500">
-          <div className="flex items-center gap-2">
+        {/* ChatGPT Style Action & Tool Footer */}
+        <div className="flex items-center justify-between mt-2 px-1 text-xs text-slate-400">
+          <div className="flex items-center gap-1">
             <CopyButton text={message.content} label="Copy" />
-            <div className="flex items-center gap-0.5 border-l border-white/[0.08] pl-2 ml-1">
+
+            <button
+              onClick={handleToggleSpeak}
+              className={`p-1.5 rounded-lg hover:bg-slate-100 transition-standard ${
+                isSpeaking ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-700'
+              }`}
+              title={isSpeaking ? 'Stop speech' : 'Read aloud'}
+            >
+              {isSpeaking ? <VolumeX className="w-3.5 h-3.5 animate-pulse" /> : <Volume2 className="w-3.5 h-3.5" />}
+            </button>
+
+            {onRegenerate && (
+              <button
+                onClick={onRegenerate}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-standard"
+                title="Regenerate response"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </button>
+            )}
+
+            <div className="flex items-center gap-0.5 border-l border-slate-200 pl-1.5 ml-1">
               <button
                 onClick={() => setFeedback(feedback === 'up' ? null : 'up')}
-                className={`p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors ${feedback === 'up' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
-                  }`}
+                className={`p-1.5 rounded-lg hover:bg-slate-100 transition-colors ${
+                  feedback === 'up' ? 'text-emerald-600 bg-emerald-50' : 'text-slate-400 hover:text-slate-700'
+                }`}
                 title="Good response"
               >
                 <ThumbsUp className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setFeedback(feedback === 'down' ? null : 'down')}
-                className={`p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors ${feedback === 'down' ? 'text-rose-400' : 'text-slate-500 hover:text-slate-300'
-                  }`}
+                className={`p-1.5 rounded-lg hover:bg-slate-100 transition-colors ${
+                  feedback === 'down' ? 'text-rose-600 bg-rose-50' : 'text-slate-400 hover:text-slate-700'
+                }`}
                 title="Poor response"
               >
                 <ThumbsDown className="w-3.5 h-3.5" />
@@ -280,9 +397,7 @@ export default function MessageBubble({ message }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px] text-slate-600">
-            <span>Scan: 0ms latency</span>
-            <span>•</span>
+          <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
             <span>
               {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
             </span>

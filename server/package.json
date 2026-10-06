@@ -1,7 +1,7 @@
 {
-  "name": "aegis-ai-server",
+  "name": "vanguard-cyber-ai-server",
   "version": "1.0.0",
-  "description": "Aegis AI Enterprise Firewall Backend",
+  "description": "Vanguard Cyber AI Enterprise Firewall Backend",
   "type": "module",
   "main": "index.js",
   "scripts": {

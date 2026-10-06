@@ -5,11 +5,15 @@ server/node_modules/
 
 # Environment files & secrets (NEVER commit these)
 .env
-.env.*
+.env.local
+.env.*.local
+!.env.example
 client/.env
-client/.env.*
+client/.env.local
+client/.env.*.local
 server/.env
-server/.env.*
+server/.env.local
+server/.env.*.local
 
 # Build outputs
 client/dist/
