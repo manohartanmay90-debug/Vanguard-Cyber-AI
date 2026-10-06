@@ -1,12 +1,26 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config();
+
 import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
 
-const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_API_KEY;
-const genAI = apiKey ? new GoogleGenAI({ apiKey }) : new GoogleGenAI({ apiKey: 'placeholder' });
+function getGenAI() {
+  const apiKey = process.env.GEMINI_API_KEY || process.env.gemini_API_KEY;
+  if (!apiKey || apiKey.trim() === '' || apiKey === 'placeholder' || apiKey === 'your_gemini_api_key_here') {
+    return null;
+  }
+  return new GoogleGenAI({ apiKey: apiKey.trim() });
+}
 
 // Prioritize ultra-fast flash-lite engines for instantaneous sub-second response
-const MODELS = ['gemini-3.5-flash-lite', 'gemini-flash-lite-latest', 'gemini-3.1-flash-lite'];
+const MODELS = ['gemini-2.5-flash-lite', 'gemini-2.0-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash'];
 
 // Zod schema for threat detection structured output
 const ThreatSchema = z.object({
@@ -93,35 +107,38 @@ export async function analyzeThreat(prompt) {
   const heuristic = fastHeuristicThreatCheck(prompt);
   if (heuristic) return heuristic;
 
+  const genAI = getGenAI();
   let lastError = null;
 
-  for (const model of MODELS) {
-    try {
-      const response = await genAI.models.generateContent({
-        model,
-        contents: THREAT_ANALYSIS_PROMPT(prompt),
-        config: {
-          responseMimeType: 'application/json',
-          temperature: 0.0,
-          maxOutputTokens: 96,
-        },
-      });
+  if (genAI) {
+    for (const model of MODELS) {
+      try {
+        const response = await genAI.models.generateContent({
+          model,
+          contents: THREAT_ANALYSIS_PROMPT(prompt),
+          config: {
+            responseMimeType: 'application/json',
+            temperature: 0.0,
+            maxOutputTokens: 96,
+          },
+        });
 
-      let rawText = response.text?.trim() ?? '{}';
-      rawText = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+        let rawText = response.text?.trim() ?? '{}';
+        rawText = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
 
-      const parsed = JSON.parse(rawText);
-      const result = ThreatSchema.safeParse(parsed);
-      if (result.success) {
-        return result.data;
+        const parsed = JSON.parse(rawText);
+        const result = ThreatSchema.safeParse(parsed);
+        if (result.success) {
+          return result.data;
+        }
+      } catch (err) {
+        lastError = err;
+        console.warn(`Threat analysis fallback from ${model}:`, err?.message?.slice(0, 80) ?? err);
       }
-    } catch (err) {
-      lastError = err;
-      console.warn(`Threat analysis fallback from ${model}:`, err?.message?.slice(0, 80) ?? err);
     }
   }
 
-  // If Gemini models fail, attempt Groq fallback if GROQ_API_KEY is available
+  // If Gemini models fail or key missing, attempt Groq fallback
   if (process.env.GROQ_API_KEY) {
     try {
       const { analyzeThreat: groqThreat } = await import('./groq.js');
@@ -131,7 +148,6 @@ export async function analyzeThreat(prompt) {
     }
   }
 
-  console.error('All threat analysis attempts failed:', lastError?.message ?? lastError);
   return {
     isMalicious: false,
     confidenceScore: 0,
@@ -152,27 +168,30 @@ export async function generateResponse(maskedPrompt, history = []) {
     { role: 'user', parts: [{ text: maskedPrompt }] },
   ];
 
+  const genAI = getGenAI();
   let lastError = null;
 
-  for (const model of MODELS) {
-    try {
-      const response = await genAI.models.generateContent({
-        model,
-        contents,
-        config: {
-          systemInstruction: ENTERPRISE_SYSTEM_INSTRUCTION,
-          temperature: 0.6,
-          maxOutputTokens: 1024,
-          topP: 0.9,
-        },
-      });
+  if (genAI) {
+    for (const model of MODELS) {
+      try {
+        const response = await genAI.models.generateContent({
+          model,
+          contents,
+          config: {
+            systemInstruction: ENTERPRISE_SYSTEM_INSTRUCTION,
+            temperature: 0.6,
+            maxOutputTokens: 1024,
+            topP: 0.9,
+          },
+        });
 
-      if (response.text) {
-        return response.text.trim();
+        if (response.text) {
+          return response.text.trim();
+        }
+      } catch (err) {
+        lastError = err;
+        console.warn(`Gemini generation fallback from ${model}:`, err?.message?.slice(0, 80) ?? err);
       }
-    } catch (err) {
-      lastError = err;
-      console.warn(`Generation fallback from ${model}:`, err?.message?.slice(0, 80) ?? err);
     }
   }
 
@@ -186,5 +205,9 @@ export async function generateResponse(maskedPrompt, history = []) {
     }
   }
 
-  throw lastError || new Error('All AI models failed to generate response.');
+  if (lastError?.message?.includes('API_KEY_INVALID') || lastError?.message?.includes('API key not valid')) {
+    throw new Error('Invalid Gemini API Key. Please verify your GEMINI_API_KEY or GROQ_API_KEY in the .env file.');
+  }
+
+  throw lastError || new Error('No AI provider configured. Please add GEMINI_API_KEY or GROQ_API_KEY to your .env file.');
 }

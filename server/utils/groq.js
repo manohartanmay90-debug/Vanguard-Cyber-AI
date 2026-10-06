@@ -1,10 +1,24 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config();
+
 import OpenAI from 'openai';
 import { z } from 'zod';
 
-const client = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: 'https://api.groq.com/openai/v1',
-});
+function getGroqClient() {
+  const apiKey = process.env.GROQ_API_KEY || process.env.groq_api_key;
+  if (!apiKey) return null;
+  return new OpenAI({
+    apiKey,
+    baseURL: 'https://api.groq.com/openai/v1',
+  });
+}
 
 // Zod schema for threat detection structured output
 const ThreatSchema = z.object({
@@ -49,8 +63,17 @@ Schema: { "isMalicious": boolean, "confidenceScore": 0-100, "reason": "string", 
  * @returns {Promise<{ isMalicious: boolean, confidenceScore: number, reason: string, category: string }>}
  */
 export async function analyzeThreat(prompt) {
-  let rawText = '{}';
+  const client = getGroqClient();
+  if (!client) {
+    return {
+      isMalicious: false,
+      confidenceScore: 0,
+      reason: 'Groq client not configured.',
+      category: 'none',
+    };
+  }
 
+  let rawText = '{}';
   try {
     const response = await client.chat.completions.create({
       model: 'llama-3.1-8b-instant',   // Fast + cheap for security classification
@@ -65,7 +88,6 @@ export async function analyzeThreat(prompt) {
     rawText = response.choices[0]?.message?.content?.trim() ?? '{}';
   } catch (err) {
     console.error('Threat analysis Groq call failed:', err?.message ?? err);
-    // Fail-OPEN for API errors (don't block all traffic on key issues)
     return {
       isMalicious: false,
       confidenceScore: 0,
@@ -74,7 +96,6 @@ export async function analyzeThreat(prompt) {
     };
   }
 
-  // Strip accidental markdown fences if model misbehaves
   rawText = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
 
   let parsed;
@@ -101,6 +122,11 @@ export async function analyzeThreat(prompt) {
  * @returns {Promise<string>}
  */
 export async function generateResponse(maskedPrompt, history = []) {
+  const client = getGroqClient();
+  if (!client) {
+    throw new Error('GROQ_API_KEY is not configured in .env');
+  }
+
   const messages = [
     { role: 'system', content: ENTERPRISE_SYSTEM_INSTRUCTION },
     ...history,
