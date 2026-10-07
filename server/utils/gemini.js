@@ -13,7 +13,7 @@ import { z } from 'zod';
 
 function getGenAI() {
   const apiKey = (process.env.GEMINI_API_KEY || process.env.gemini_API_KEY || '').trim();
-  if (!apiKey || apiKey === 'placeholder' || apiKey === 'your_gemini_api_key_here' || !apiKey.startsWith('AIzaSy')) {
+  if (!apiKey || apiKey === 'placeholder' || apiKey === 'your_gemini_api_key_here') {
     return null;
   }
   return new GoogleGenAI({ apiKey });
