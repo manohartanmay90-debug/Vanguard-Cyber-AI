@@ -13,13 +13,13 @@ import { z } from 'zod';
 
 function getGenAI() {
   const apiKey = (process.env.GEMINI_API_KEY || process.env.gemini_API_KEY || '').trim();
-  if (!apiKey || apiKey === 'placeholder' || apiKey === 'your_gemini_api_key_here') {
+  if (!apiKey || apiKey === 'placeholder' || apiKey === 'your_gemini_api_key_here' || !apiKey.startsWith('AIzaSy')) {
     return null;
   }
   return new GoogleGenAI({ apiKey });
 }
 
-// Prioritize ultra-fast flash engines for instantaneous sub-second response
+// Prioritize ultra-fast flash engines
 const MODELS = ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-2.5-flash', 'gemini-1.5-flash'];
 
 // Zod schema for threat detection structured output
