@@ -21,8 +21,8 @@ function getGroqClient() {
 }
 
 // Model fallback cascade for Groq
-const GROQ_FAST_MODELS = ['openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'openai/gpt-oss-120b', 'llama-3.1-8b-instant'];
-const GROQ_REASON_MODELS = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'llama-3.3-70b-versatile'];
+const GROQ_FAST_MODELS = ['qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b'];
+const GROQ_REASON_MODELS = ['qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b'];
 
 // Zod schema for threat detection structured output
 const ThreatSchema = z.object({

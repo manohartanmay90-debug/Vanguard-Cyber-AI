@@ -19,8 +19,8 @@ function getGenAI() {
   return new GoogleGenAI({ apiKey });
 }
 
-// Prioritize ultra-fast flash-lite engines for instantaneous sub-second response
-const MODELS = ['gemini-2.5-flash-lite', 'gemini-2.0-flash-lite', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+// Prioritize ultra-fast flash engines for instantaneous sub-second response
+const MODELS = ['gemini-2.0-flash', 'gemini-2.0-flash-lite', 'gemini-2.5-flash', 'gemini-1.5-flash'];
 
 // Zod schema for threat detection structured output
 const ThreatSchema = z.object({
